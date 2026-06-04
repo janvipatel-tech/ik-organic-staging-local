@@ -1,0 +1,29 @@
+# ───────────────────────────────────────────────────────────
+# Ignore EVERYTHING by default, then un-ignore only what we manage.
+# ───────────────────────────────────────────────────────────
+/*
+
+# Keep this ignore file and the README tracked
+!.gitignore
+
+# Re-include wp-content but ignore its contents by default
+!wp-content/
+wp-content/*
+
+# ── Track our custom-code-sync plugin (code + exported snippets) ──
+!wp-content/plugins/
+wp-content/plugins/*
+!wp-content/plugins/custom-code-sync/
+
+# ── Track the Elementor child theme (theme-editor code lives here) ──
+!wp-content/themes/
+wp-content/themes/*
+!wp-content/themes/hello-elementor-child-FT-1/
+
+# Never track these even inside tracked folders
+**/node_modules/
+**/.DS_Store
+*.log
+wp-content/uploads/
+wp-content/cache/
+wp-content/uploads/elementor/

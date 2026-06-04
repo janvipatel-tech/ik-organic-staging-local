@@ -1,0 +1,2553 @@
+/* hide default header and footer */
+.elementor-location-header{
+  display: none;
+}
+
+.elementor.elementor-29907.elementor-location-footer {
+  display: none;
+}
+
+:root {
+  --btn-primary: #e7ffaa;
+  --text-primary: #54b2ff;
+  --text-secondary: #ffffff;
+  --text-tertiary: #d6ecff;
+  --text-orange: #ff9201;
+  --white: #fff;
+  --black: #000;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+/* Make all images responsive by default */
+img {
+  max-width: 100%;
+  height: auto;
+  width: 100%;
+}
+
+body {
+  font-family: "Open Sans";
+  line-height: 1.6;
+  /* Background position options - choose one: */
+
+  /* Current setting - centered fixed: */
+  /* background: url(./img/bg.jpg) no-repeat center center fixed; */
+
+  /* Option 1 - top left: */
+  /* background: url(./img/bg.jpg) no-repeat top left fixed; */
+
+  /* Option 2 - top center: */
+  background: url(../img/salary/results-bg.webp) no-repeat top center fixed;
+  background-color: #061647;
+
+  /* Option 3 - bottom center: */
+  /* background: url(./img/bg.jpg) no-repeat bottom center fixed; */
+
+  /* Option 4 - custom position (horizontal% vertical%): */
+  /* background: url(./img/bg.jpg) no-repeat 75% 25% fixed; */
+
+  background-size: cover;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+@keyframes spin {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+
+a {
+  text-decoration: none;
+}
+
+.container {
+  padding: 0 180px;
+  max-width: 1940px;
+  margin: 0 auto;
+}
+
+.heading-1 {
+  color: var(--white);
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 24.13px;
+  /* 100.543% */
+}
+
+.heading-2 {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--white);
+  line-height: 140%;
+}
+
+.nav-container {
+  padding: 16px 180px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-text {
+  color: var(--text-tertiary);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 0;
+}
+
+.nav-text p {
+  margin: 0px;
+}
+
+.nav-content {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 48px;
+  padding-top: 48px;
+}
+
+/* Buttons */
+.btn {
+  padding: 8px 24px;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  background-color: transparent;
+  cursor: pointer;
+  border: 1px solid var(--btn-primary);
+  line-height: 148%;
+  color: var(--btn-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+.btn a {
+  color: var(--black);
+}
+
+.btn-primary {
+  background-color: var(--btn-primary);
+  color: var(--black);
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.btn:focus,
+.btn:hover,
+.btn:active {
+  color: var(--black);
+  outline: none;
+}
+
+.btn-primary:focus,
+.btn-primary:hover,
+.btn-primary:active {
+  background-color: #d5f38d !important;
+  color: var(--black);
+  outline: none;
+}
+
+.btn:disabled,
+.btn[disabled],
+.btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+[type=button]:focus, [type=button]:hover, [type=submit]:focus, [type=submit]:hover, button:focus, button:hover {
+  background-color: transparent;
+}
+
+.btn-secondary:hover, .btn-secondary:focus, .btn-secondary:active {
+  background-color: #d5f38d !important;
+  color: var(--black);
+  outline: none;
+}
+
+.btn-secondary:hover path, .btn-secondary:focus path, .btn-secondary:active path {
+  stroke: var(--black);
+}
+
+/*share css*/
+.share-options-modal {
+  position: absolute;
+  top: 218px;
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+}
+
+.share-icons {
+  display: flex;
+  gap: 10px;
+align-items: center;
+}
+
+.share-icon {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+}
+
+.share-icon svg {
+  width: 100%;
+  height: 100%;
+  fill: #333;
+}
+a#shareFacebook {
+  width: 12px;
+}
+
+.border-left-line {
+border-left-width: 1px;
+border-color: rgba(134, 139, 146, 1);
+border-style: solid ;
+}
+
+#copy-results-link {
+padding: 6px 16px;
+}
+
+
+
+/* Results title */
+.results-container {
+  padding: 40px 0;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.results-title {
+  color: var(--white);
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 130%;
+  /* 41.6px */
+}
+
+.results-name {
+  color: var(--btn-primary);
+}
+
+.salary-insights-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.results-btn-container {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: end;
+}
+
+.salary-insights-title {
+  margin-bottom: 32px;
+}
+
+#market-value-worth {
+  max-width: 306px !important;
+  width: 100% !important;
+  height: 325px !important;
+}
+
+#chart-container {
+  position: relative;
+  margin: -70px auto -20px;
+}
+
+#gaugeCenter {
+  position: absolute;
+  top: 56%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  text-align: center;
+}
+
+.gauage-range {
+  font-family: Inter, sans-serif;
+  font-weight: 700;
+  font-size: 27.86px;
+  line-height: 29.79px;
+  letter-spacing: 0px;
+  text-align: center;
+  color: var(--white);
+  white-space: nowrap;
+}
+
+.range-label {
+  font-family: Lato, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 140%;
+  letter-spacing: 0%;
+  text-align: center;
+  margin-top: 8px;
+  color: var(--white);
+}
+
+.tick-left,
+.tick-right {
+  position: absolute;
+  bottom: 60px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0px;
+  text-align: center;
+  color: var(--white);
+}
+
+.tick-left {
+  left: 0;
+}
+
+.tick-right {
+  right: 0;
+}
+
+/* Salary Insights Card Styles */
+.salary-insights-card {
+  background: linear-gradient(30.81deg,
+          rgba(255, 255, 255, 0.1) 18.05%,
+          rgba(224, 239, 255, 0.1) 94.25%);
+  border-radius: 12px;
+  padding: 32px 32px 54px 32px;
+  box-shadow: 0 4px 24px rgba(13, 10, 44, 0.09);
+}
+
+.chart-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+#salaryChart {
+  background: transparent;
+  margin-bottom: 8px;
+}
+
+.worth-section {
+  margin-top: -15px;
+  margin-bottom: 32px;
+}
+
+.worth-title {
+  margin-bottom: 8px;
+}
+
+.worth-desc {
+  font-family: Lato, sans-serif;
+  font-size: 14px;
+  color: #dcdcdc;
+}
+
+.similar-roles-title {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--white);
+  margin-bottom: 16px;
+}
+
+.similar-roles-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.role-card {
+  background: rgba(0, 0, 0, 0.17);
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.role-name {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--white);
+}
+
+.role-salary {
+  font-family: Inter, sans-serif;
+  font-weight: 700;
+  font-size: 19px;
+  color: var(--white);
+}
+
+.salary-standard-container {
+  background: linear-gradient(30.81deg,
+          rgba(255, 255, 255, 0.1) 18.05%,
+          rgba(224, 239, 255, 0.1) 94.25%);
+  padding: 32px;
+  border-radius: 12px;
+}
+
+.salary-standard-title {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 140%;
+  color: var(--white);
+  margin-bottom: 32px;
+}
+
+#industrySalaryChart {
+  max-width: 436px !important;
+  width: 100% !important;
+  height: 510px !important;
+}
+
+.comp-container {
+  padding: 32px;
+  border-radius: 12px;
+  background: linear-gradient(31deg,
+          rgba(255, 255, 255, 0.1) 18.05%,
+          rgba(224, 239, 255, 0.1) 94.25%);
+}
+
+.chart-container {
+  margin: 0 auto;
+  width: 220px;
+  height: 220px;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 27px;
+  margin: 20px 0;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin: 8px 0;
+}
+
+.legend-color {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.variable {
+  background: #004998;
+}
+
+.fixed-pay {
+  background: #00165c;
+}
+
+.equity-pay {
+  background: #5bc1ff;
+}
+
+.legend-text {
+  font-family: Lato, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 16px;
+  letter-spacing: 0px;
+  color: #fff5f5;
+}
+
+.comp-title {
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 140%;
+  margin-bottom: 8px;
+}
+
+.comp-subtitle {
+  font-family: Lato, sans-serif;
+  color: #dcdcdc;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 140%;
+}
+
+/* Register Session Card Styles */
+.register-session-container {
+  margin-top: 32px;
+  width: 100%;
+}
+
+.register-session-card {
+  background: linear-gradient(180deg,
+          rgba(0, 130, 248, 0.55) 0%,
+          rgba(255, 255, 255, 0.275) 100%);
+  box-shadow: 0px 14px 84px 0px #0082f833;
+  backdrop-filter: blur(34px);
+  border-radius: 12px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+  width: 100%;
+}
+
+.register-session-title {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.48em;
+  color: #fff;
+}
+
+.register-session-title span {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 148%;
+  letter-spacing: 0%;
+}
+
+.register-session-slots {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.register-session-slot img {
+  animation: spin 1.2s linear infinite;
+  width: 20px;
+  height: 20px;
+  display: none;
+}
+
+.register-session-slot.disabled img {
+  display: block;
+}
+
+
+/* .register-session-slots .register-session-slot:nth-child(2) {
+  display: none;
+} */
+
+.register-session-slot {
+  background: #e7ffaa;
+  color: #000;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 1.36em;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.register-session-slot.more {
+  background: #e7ffaa;
+  color: #000;
+  font-weight: 600;
+}
+
+.salary-insights-card-container,
+.salary-standard-container,
+.comp-break-up-container {
+  width: 32%;
+}
+
+/* Career Projection */
+.career-projection-title {
+  margin: 56px 0 32px;
+}
+
+.career-projection-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+  align-items: stretch;
+}
+
+.career-projection-card {
+  background: linear-gradient(30.81deg,
+          rgba(255, 255, 255, 0.1) 18.05%,
+          rgba(224, 239, 255, 0.1) 94.25%);
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(13, 10, 44, 0.09);
+  padding: 32px;
+}
+
+.career-projection-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.career-projection-type {
+  font-family: Lato;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0%;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.career-projection-legend {
+  display: flex;
+  gap: 12px;
+  flex-direction: column;
+}
+
+.career-projection-legend .legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+}
+
+.legend-dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.legend-dot.orange {
+  background: #ff9201;
+}
+
+.legend-dot.blue {
+  background: #0082f8;
+}
+
+.legend-label {
+  font-family: Lato, sans-serif;
+  font-size: 14px;
+  color: #222;
+}
+
+.career-projection-chart {
+  width: 100%;
+  max-width: calc(100% - 655px);
+  min-width: 550px;
+}
+
+.career-projection-chart-area {
+  margin-top: 24px;
+  width: 100%;
+  min-height: 260px;
+}
+
+.carrer-projection-percentage {
+  display: flex;
+  gap: 32px;
+  flex-direction: column;
+  /* max-width: 764px; */
+}
+
+#careerProjectionChart {
+  background: transparent;
+}
+
+.projection-percentage-card {
+  background: linear-gradient(269.11deg,
+          #85795b -23.92%,
+          rgba(0, 0, 0, 0) 42.71%),
+      linear-gradient(30.81deg,
+          rgba(255, 255, 255, 0.1) 18.05%,
+          rgba(224, 239, 255, 0.1) 94.25%);
+  border-radius: 12px;
+  padding: 37px 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 32px;
+}
+
+.projection-percentage-circle {
+  position: relative;
+  width: 128px;
+  height: 128px;
+  flex-basis: 128px;
+}
+
+.projection-percentage-content {
+  width: calc(100% - 180px);
+}
+
+.projection-percentage-bg {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: conic-gradient(rgba(255, 140, 0, 0.1) 0% 0%,
+          rgba(0, 22, 92, 1) 0% 100%);
+}
+
+.projection-percentage-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 700;
+  font-size: 32.1px;
+  line-height: 37.93px;
+  letter-spacing: 0px;
+  color: var(--text-orange);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.percentage-title {
+  font-family: Lato, sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 130%;
+  letter-spacing: 0%;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.percentage-desc {
+  font-family: Lato, sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 130%;
+  letter-spacing: 0%;
+  color: var(--white);
+}
+
+/* Explore Masterclass Section */
+.explore-masterclass-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 48px;
+}
+
+.explore-masterclass-card {
+  background: linear-gradient(180deg,
+          rgba(0, 130, 248, 0.55) 0%,
+          rgba(255, 255, 255, 0.275) 100%);
+  border-radius: 12px;
+  box-shadow: 0px 14px 84px 0px rgba(0, 130, 248, 0.2);
+  padding: 32px 48px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+/* .explore-masterclass-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  } */
+.explore-masterclass-title {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
+  font-size: 32px;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.explore-masterclass-arrow svg {
+  display: block;
+}
+
+.explore-masterclass-desc {
+  font-family: Lato, sans-serif;
+  font-size: 20px;
+  color: #fff;
+  font-weight: 400;
+}
+
+.explore-masterclass-instructors {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.instructor-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #61b0f7;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+.avatar-1 {
+  background: url("../img/salary/instructor1.png") center/cover, #61b0f7;
+  margin-right: -18px;
+  z-index: 4;
+}
+
+.avatar-2 {
+  background: url("../img/salary/instructor2.png") center/cover, #61b0f7;
+  margin-right: -18px;
+  z-index: 3;
+}
+
+.avatar-3 {
+  background: url("../img/salary/instructor3.png") center/cover, #61b0f7;
+  margin-right: -18px;
+  z-index: 2;
+}
+
+.avatar-4 {
+  background: url("../img/salary/instructor4.png") center/cover, #61b0f7;
+}
+
+.explore-masterclass-instructors-label {
+  font-family: Lato, sans-serif;
+  font-size: 16px;
+  color: #fff;
+  font-weight: 400;
+  margin-left: 16px;
+  background: linear-gradient(90deg,
+          rgba(97, 176, 247, 0) 0%,
+          rgba(9, 14, 42, 0.82) 97.83%);
+  padding: 10px 15px;
+  margin-left: -10px;
+  border-radius: 4px;
+}
+
+/* Skills and Compensation Correlation */
+
+.skills-compensation-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.salary-uplift-title {
+  margin: 56px 0 32px;
+}
+
+.salary-uplift-container {
+  /* max-width: 764px; */
+  width: calc(100% - -8px);
+  border-radius: 12px;
+  padding: 32px;
+  background: linear-gradient(30.81deg,
+          rgba(255, 255, 255, 0.1) 18.05%,
+          rgba(224, 239, 255, 0.1) 94.25%);
+}
+
+.salary-uplift-chart {
+  margin-top: 55px;
+}
+
+#salaryUpliftChart {
+  width: 100% !important;
+  height: 302px !important;
+}
+
+.net-worth-potential-container {
+  width: 100%;
+  background: linear-gradient(30.81deg,
+          rgba(255, 255, 255, 0.1) 18.05%,
+          rgba(224, 239, 255, 0.1) 94.25%);
+  border-radius: 12px;
+  padding: 32px;
+}
+
+.net-worth-amt {
+  margin: 32px 0;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 24px;
+  letter-spacing: 0px;
+  color: var(--white);
+}
+
+/* Projected Net Worth Bar Visualization */
+.projected-net-worth-container {
+  position: relative;
+  display: flex;
+  gap: 8px;
+}
+
+.net-worth-bar {
+  height: 40px;
+  border-radius: 4px;
+  margin-right: 8px;
+  margin-left: 0;
+}
+
+.net-worth-label {
+  color: var(--white);
+  border-radius: 4px;
+  height: 121px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+}
+
+.net-worth-label-title {
+  font-size: 12px;
+  font-weight: 400;
+  text-align: left;
+  line-height: 2em;
+  height: 2em;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.net-worth-label-value {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.85em;
+  display: -webkit-box;
+}
+
+.projected-label {
+  background: #00165c;
+  width: 49%;
+}
+
+.skill1 {
+  background: #004998;
+  width: 21%;
+}
+
+.skill2 {
+  background: #0483f8;
+  width: 21%;
+}
+
+.skill3 {
+  background: #5bc1ff;
+  width: 21%;
+  color: #003758;
+}
+
+/* Projected Net Worth Skills Rows */
+.projected-net-worth-skills {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.net-worth-skill-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.net-worth-skill-dot {
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  flex-grow: 0;
+  align-self: center;
+}
+
+.dot-base {
+  background: #00165c;
+}
+
+.dot-skill1 {
+  background: #004998;
+}
+
+.dot-skill2 {
+  background: #0483f8;
+}
+
+.dot-skill3 {
+  background: #5bc1ff;
+}
+
+.net-worth-skill-text {
+  color: var(--white);
+  font-family: "Lato", sans-serif;
+  font-size: 14px;
+}
+
+.net-worth-skill-text p {
+  display: inline;
+}
+
+.net-worth-skill-text span {
+  font-weight: 700;
+}
+
+/* Recommended Courses */
+.recommended-courses-title {
+  margin: 32px 0 24px;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24.13px;
+  letter-spacing: 0%;
+  color: var(--white);
+}
+
+.recommended-courses-title span {
+  color: var(--btn-primary);
+}
+
+/* Recommended Courses Cards */
+.recommended-courses-list {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 48px;
+}
+
+.course-card {
+  background: linear-gradient(180deg,
+          rgba(0, 130, 248, 0.55) 0%,
+          rgba(255, 255, 255, 0.55) 100%);
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(13, 10, 44, 0.09);
+  padding: 24px 24px 31px;
+  /* height: 254px; */
+  position: relative;
+  transition: box-shadow 0.2s;
+  width: 24%;
+  cursor: pointer;
+}
+
+.course-card:hover {
+  box-shadow: 0 8px 32px rgba(0, 130, 248, 0.18);
+}
+
+.course-card-image {
+  width: 100%;
+  height: 117px;
+  background: #222;
+  border-radius: 12px 12px 0 0;
+  position: relative;
+  border-radius: 4px;
+  opacity: 0.84;
+}
+
+.course-card-image img {
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+/* .course-card-image-1 { background-image: url('./img/course1.png'); }
+  .course-card-image-2 { background-image: url('./img/course2.png'); }
+  .course-card-image-3 { background-image: url('./img/course3.png'); } */
+.course-card-content {
+  margin-top: 54px;
+}
+
+.course-card-title {
+  margin-bottom: 4px;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  color: #fff;
+}
+
+.course-card-desc {
+  font-family: Lato, sans-serif;
+  font-size: 14px;
+  color: #fff;
+  font-weight: 400;
+  margin-bottom: 8px;
+}
+
+.course-card-badge {
+  background: #0082f8;
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 4px 12px;
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  width: max-content;
+  bottom: 0;
+  width: 80%;
+  max-width: 232px;
+  text-align: center;
+}
+
+.badge-fast {
+  background: #e7ffaa;
+  color: var(--black);
+}
+
+.course-card-arrow {
+  position: absolute;
+  right: 4px;
+  top: 5px;
+  z-index: 2;
+}
+
+.course-card-arrow-mobile {
+  display: none;
+}
+
+/* View All Card */
+.course-card.view-all {
+  background: linear-gradient(180deg,
+          rgba(0, 130, 248, 0.55) 0%,
+          rgba(255, 255, 255, 0.55) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+.view-all-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.view-all-title {
+  font-weight: 700;
+  font-size: 24px;
+  color: #fff;
+}
+
+.view-all-desc {
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.view-all-btn {
+  background: #e7ffaa;
+  color: #000;
+  font-weight: 700;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.discover-container {
+  margin-top: 80px;
+  background: linear-gradient(180deg,
+          rgba(0, 130, 248, 0.28) 0%,
+          rgba(255, 255, 255, 0.14) 100%);
+  border-radius: 12px;
+  padding: 48px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 62px;
+}
+
+.discover-content {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  color: var(--text-secondary);
+}
+
+.discover-content h1 {
+  margin: 0px;
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 38px;
+  letter-spacing: 0%;
+}
+
+.discover-content p {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 30px;
+  letter-spacing: 0%;
+}
+
+.discover-content button {
+  width: fit-content;
+}
+
+.discover-container img {
+  width: 100%;
+  max-width: 612px;
+}
+
+/* IK Advantage  - Net worth*/
+.ik-advantage-title {
+  margin-bottom: 32px;
+}
+
+.net-worth-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 38px;
+}
+
+.net-worth-container {
+  padding: 32px;
+  border-radius: 12px;
+  width: 100%;
+  background: linear-gradient(30.81deg,
+          rgba(255, 255, 255, 0.1) 18.05%,
+          rgba(224, 239, 255, 0.1) 94.25%);
+  max-width: calc(100% - 678px);
+  min-width: 520px;
+}
+
+.net-worth-header-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.net-worth-header {
+  font-family: Lato, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.net-worth-subtitle {
+  font-weight: 700;
+  font-size: 18px;
+  color: #fff;
+}
+
+.net-growth-labels {
+  display: flex;
+  flex-direction: row;
+  gap: 27px;
+  align-self: flex-end;
+}
+
+.net-growth-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.net-growth-ellipse {
+  width: 19px;
+  height: 19px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.net-growth-ellipse.ai-enabled {
+  background: #fff;
+  border: 1px solid #e0e0e0;
+}
+
+.net-growth-ellipse.industry-average {
+  background: #81c0ff;
+}
+
+.net-growth-ellipse.non-ai-enabled {
+  background: #535353;
+}
+
+.net-growth-label-text {
+  font-family: Lato, sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  color: #fff5f5;
+}
+
+.net-worth-metrics-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.net-worth-metrics-row {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  height: 244px;
+}
+
+.net-worth-metric-card {
+  flex: 1;
+  background: linear-gradient(30.81deg,
+          rgba(7, 133, 247, 0.1) 18.05%,
+          rgba(224, 239, 255, 0.1) 94.25%);
+  border-radius: 12px;
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.net-worth-metric-number {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  font-size: 50px;
+  line-height: 1.5em;
+  letter-spacing: -2%;
+  color: #fff;
+  margin-bottom: 10px;
+  word-break: break-all;
+}
+
+.net-worth-metric-desc {
+  font-family: "Lato", sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.4em;
+  color: #fff;
+}
+
+.net-growth-chart-container {
+  margin-top: 30px;
+  max-height: 317px;
+}
+
+.net-growth-indicator-container {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+
+.net-growth-indicatior-wrap {
+  display: flex;
+  gap: 8px;
+}
+
+.net-growth-indicatior-wrap p {
+  font-family: Inter, sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 18px;
+  letter-spacing: 0px;
+  color: var(--white);
+}
+
+@media screen and (max-width: 1919px) {
+  .register-session-slots .register-session-slot:nth-child(2) {
+      display: none;
+  }
+
+  /* .container {
+      padding: 0 80px;
+      max-width: 1940px;
+      margin: 0 auto;
+  } */
+  .footer-container {
+    padding-bottom: 48px !important;
+    padding-top: 48px !important;
+}
+
+
+  #chart-container {
+      margin: -70px auto -10px;
+  }
+}
+
+/* @media screen and (min-width: 1440px) {
+  #market-value-worth {
+      height: 320px !important;
+      width: 100% !important;
+      max-width: 296px !important;
+  }
+} */
+
+@media screen and (max-width: 1580px) {
+  .container {
+      padding: 0 80px;
+  }
+
+  /* Market value */
+  .salary-insights-container {
+      gap: 24px;
+  }
+
+  .salary-insights-card {
+      padding: 32px;
+  }
+
+  .salary-standard-container {
+      max-width: 410px;
+  }
+
+  .salary-insights-title {
+      margin-bottom: 24px;
+  }
+
+  #market-value-worth {
+      max-width: 266px !important;
+      width: 100% !important;
+      height: 285px !important;
+  }
+
+  .tick-left,
+  .tick-right {
+      bottom: 40px;
+  }
+
+  .gauage-range {
+      font-family: Inter, sans-serif;
+      font-weight: 700;
+      font-size: 23.67px;
+      line-height: 25.31px;
+      letter-spacing: 0px;
+  }
+
+  #gaugeCenter {
+      top: 58%;
+  }
+
+  .range-label {
+      font-family: Lato, sans-serif;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 140%;
+      letter-spacing: 0%;
+  }
+
+  #chart-container {
+      position: relative;
+      margin: -50px auto -10px;
+  }
+
+  .range-label {
+      font-family: Lato, sans-serif;
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 140%;
+      letter-spacing: 0%;
+      color: var(--white);
+      margin-top: 6px;
+  }
+
+  .register-session-slots .register-session-slot:nth-child(2) {
+      display: block;
+  }
+
+  .worth-section {
+      margin-top: 0;
+      margin-bottom: 32px;
+  }
+
+  #industrySalaryChart {
+      max-width: 346px !important;
+      width: 100% !important;
+      height: 530px !important;
+  }
+
+  .comp-break-up-container {
+      display: flex;
+      justify-content: space-between;
+      flex-direction: column;
+      gap: 16px;
+  }
+
+  .register-session-container {
+    margin-top: 0;
+  }
+  
+
+  .chart-container {
+      max-width: 210px !important;
+      width: 100% !important;
+      height: 230px !important;
+  }
+  .legend {
+    gap: 10px;
+    margin: 0 0 5px 0;
+  }
+
+  .legend-text {
+      font-size: 13px;
+  }
+
+  .register-session-slots .register-session-slot:nth-child(2) {
+      display: none;
+  }
+
+  .register-session-slots {
+      justify-content: flex-start;
+  }
+
+  .register-session-slot {
+      width: fit-content;
+      white-space: nowrap;
+  }
+
+  /* career projection */
+  .career-projection-title {
+      margin-bottom: 24px;
+      margin-top: 40px;
+  }
+
+  .career-projection-container {
+      gap: 24px;
+  }
+
+  .career-projection-chart {
+      max-width: calc(100% - 610px);
+      min-width: 520px;
+  }
+
+  .carrer-projection-percentage {
+      gap: 24px;
+  }
+
+  .projection-percentage-card {
+      padding: 40px 24px;
+  }
+
+  .projection-percentage-content {
+      width: calc(100% - 160px);
+  }
+
+  .percentage-desc {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 130%;
+  }
+
+  /* explore masterclass */
+  .explore-masterclass-card {
+      padding: 24px 32px;
+  }
+
+  .explore-masterclass-desc {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 140%;
+      letter-spacing: 0%;
+  }
+
+  .explore-masterclass-title {
+      font-weight: 700;
+      font-size: 24px;
+      line-height: 38px;
+      letter-spacing: 0%;
+  }
+
+  /* skills and compensation */
+  .salary-uplift-title {
+      margin: 40px 0 24px;
+  }
+
+  .skills-compensation-container {
+      gap: 24px;
+  }
+
+  .net-worth-label-value {
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 15px;
+      letter-spacing: 0px;
+  }
+
+  .net-worth-label-title {
+      font-weight: 400;
+      font-size: 11px;
+      line-height: 24px;
+      height: 24px;
+      letter-spacing: 0px;
+  }
+
+  .projected-label {
+      width: 60%;
+  }
+
+  .recommended-courses-title {
+      margin: 24px 0;
+  }
+
+  .recommended-courses-list {
+      gap: 16px;
+      margin-bottom: 40px;
+  }
+
+  .course-card-content {
+      margin-top: 24px;
+  }
+
+  .course-card-title {
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 130%;
+      letter-spacing: 0%;
+  }
+
+  /* Skills and Compensation Correlation */
+  #salaryUpliftChart {
+      height: 322px !important;
+  }
+
+  .net-worth-potential-container {
+      padding: 32px 32px 27px 32px;
+  }
+
+  .net-worth-wrapper {
+      gap: 24px;
+  }
+
+  .net-worth-container {
+      height: auto;
+  }
+
+  .net-worth-header-container {
+      flex-wrap: nowrap;
+  }
+
+  .net-growth-labels {
+      flex-direction: column;
+      gap: 9px;
+  }
+
+  .net-worth-metric-number {
+      font-weight: 700;
+      font-size: 40px;
+      line-height: 150%;
+      letter-spacing: -2%;
+  }
+
+  #highest-compensation {
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 150%;
+      letter-spacing: -2%;
+  }
+
+  .net-worth-metric-desc {
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 130%;
+      letter-spacing: 0%;
+  }
+
+  .net-worth-container {
+      max-width: calc(100% - 533px);
+  }
+
+  .net-worth-metrics-container {
+      gap: 30px;
+  }
+
+  .net-worth-metrics-row {
+      gap: 24px;
+  }
+
+  .net-worth-metrics-row {
+      height: 254px;
+  }
+}
+
+@media screen and (max-width: 1180px) {
+  .container {
+      padding: 0 16px;
+  }
+
+  .career-projection-container {
+      flex-direction: column;
+  }
+
+  .career-projection-chart,
+  .career-projection-card {
+      max-width: 100%;
+      min-width: auto;
+  }
+}
+
+/* @media screen and (max-width: 1024px) {
+  .container {
+      padding: 0 16px;
+  }
+
+} */
+
+@media screen and (max-width: 786px) {
+  .nav-container {
+      padding: 12px 16px;
+  }
+
+  .nav-text {
+      display: none;
+  }
+
+  .logo img {
+      width: 93px;
+  }
+
+  .btn {
+      font-size: 11px;
+      border-radius: 4px;
+      line-height: 148%;
+      padding: 6px 16px;
+      width: fit-content;
+  }
+
+  .logo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+  }
+
+  .nav-content {
+      flex-direction: column;
+      width: 100%;
+      align-items: flex-end;
+  }
+
+  /* Discover Section */
+  .discover-container {
+      margin-top: 0;
+      flex-direction: column;
+      background: linear-gradient(180deg,
+              rgba(0, 130, 248, 0.46) 0%,
+              rgba(255, 255, 255, 0.23) 100%);
+      padding: 24px;
+      border-radius: 8px;
+      gap: 24px;
+  }
+
+  .discover-container img {
+      max-width: 100%;
+  }
+
+  .discover-content {
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
+  }
+
+  .discover-content h1 {
+      font-size: 20px;
+      line-height: 130%;
+      letter-spacing: -2%;
+      text-align: center;
+  }
+
+  .discover-content p {
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 150%;
+      letter-spacing: 0%;
+      text-align: center;
+  }
+
+  .discover-btn {
+      margin-top: 9px;
+      padding: 16px 32px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      width: fit-content !important;
+  }
+
+  .footer-container {
+      padding: 32px 0px !important;
+  }
+
+  .footer-container img {
+      width: 100px;
+  }
+}
+
+/* Large screens (1440px - 1920px) */
+@media screen and (min-width: 1440px) and (max-width: 1920px) {
+  .container {
+      padding: 0 80px;
+  }
+
+  .nav-container {
+      padding: 16px 80px;
+  }
+  .footer-container {
+    padding-bottom: 48px;
+    padding-top: 48px;
+  }
+}
+
+@media screen and (min-width: 786px) and (max-width: 1140px) {
+  .discover-container {
+      padding: 30px;
+  }
+
+  .discover-content h1 {
+      font-size: 28px;
+  }
+
+  .discover-content p {
+      font-size: 15px;
+  }
+
+  .discover-content {
+      gap: 10px;
+  }
+}
+
+@media screen and (min-width: 1140px) and (max-width: 1440px) {
+  .discover-container {
+      padding: 30px;
+  }
+
+  .discover-container img {
+      max-width: 500px;
+  }
+
+  .discover-content {
+      gap: 15px;
+  }
+}
+
+@media (max-width: 900px) {
+  
+  .heading-1 {
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 140%;
+      letter-spacing: 0%;
+      text-align: center;
+  }
+
+  .heading-2 {
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 140%;
+      letter-spacing: 0%;
+      text-align: center;
+  }
+
+  /* Page title */
+  .results-title {
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 140%;
+      letter-spacing: 0%;
+  }
+
+  .results-title span {
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 140%;
+      letter-spacing: 0%;
+      display: block;
+  }
+
+  .results-header {
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      margin-top: 16px;
+  }
+
+  .results-container {
+      padding: 16px 0;
+  }
+
+  .results-btn-container {
+      gap: 10px;
+      justify-content: space-between;
+      flex-direction: row-reverse;
+      width: 100%;
+  }
+  #copy-results-link, #shareButton {
+      padding: 0;
+  }
+
+  .results-btn-container #shareButton, #copyButton {
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 148%;
+      letter-spacing: 0%;
+      padding: 0;
+      border: none;
+      background-color: transparent !important;
+      color: var(--btn-primary) !important;
+  }
+  .results-btn-container .btn:hover path,
+  .results-btn-container .btn:focus path,
+  .results-btn-container .btn:active path {
+      stroke: var(--btn-primary);
+  }
+
+  #copy-results-link { 
+      background-color: var(--btn-primary) !important;
+      color: var(--black) !important;
+      padding: 6px 16px;
+  }
+
+  /* Market Value */
+
+  #market-value-worth {
+      height: 220px !important;
+  }
+
+  #chart-container {
+      margin: -30px auto -35px;
+  }
+
+  #gaugeCenter {
+      position: absolute;
+      top: 56%;
+      left: 50%;
+      transform: translate(-50%, -40%);
+      text-align: center;
+  }
+
+  .gauage-range {
+      font-weight: 700;
+      font-size: 19.47px;
+      line-height: 20.82px;
+      letter-spacing: 0px;
+  }
+
+  .range-label {
+      margin-top: 5px;
+      font-weight: 400;
+      font-size: 11px;
+      line-height: 140%;
+      letter-spacing: 0%;
+  }
+
+  .tick-left,
+  .tick-right {
+      font-weight: 700;
+      font-size: 11.52px;
+      line-height: 16.77px;
+      letter-spacing: 0px;
+  }
+
+  .salary-insights-container {
+      flex-direction: column;
+      gap: 16px;
+  }
+
+  .salary-insights-card-container,
+  .salary-standard-container,
+  .comp-break-up-container {
+      width: 100%;
+      max-width: 100%;
+  }
+
+  .salary-insights-card,
+  .salary-standard-container,
+  .comp-container,
+  .register-session-card {
+      padding: 16px;
+  }
+
+  #industrySalaryChart {
+      height: 300px !important;
+  }
+
+  .worth-section {
+      margin: 16px 0;
+  }
+
+  .worth-desc {
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 140%;
+      letter-spacing: 0%;
+      text-align: center;
+  }
+
+  .role-card {
+      padding: 8px 12px;
+  }
+
+  .role-name {
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 100%;
+      letter-spacing: 0%;
+  }
+
+  .role-salary {
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 29.79px;
+      letter-spacing: 0px;
+  }
+
+  .salary-standard-title {
+      margin-bottom: 20px;
+  }
+
+  #industrySalaryChart {
+      height: 300px !important;
+  }
+
+  .chart-container {
+      max-width: 171px !important;
+      height: 171px !important;
+  }
+
+  .legend-text {
+      font-size: 12px;
+  }
+
+  .legend-color {
+      width: 14px;
+      height: 14px;
+  }
+
+  .comp-subtitle {
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 140%;
+      letter-spacing: 0%;
+      text-align: center;
+  }
+
+  .register-session-card {
+      align-items: center;
+      gap: 16px;
+  }
+
+  .register-session-title {
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 148%;
+      letter-spacing: 0%;
+      text-align: center;
+  }
+
+  .register-session-title span {
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 148%;
+      letter-spacing: 0%;
+      text-align: center;
+  }
+
+  .register-session-slots {
+      justify-content: center;
+  }
+
+  .register-session-slots .register-session-slot:nth-child(2) {
+      display: block;
+  }
+
+  .register-session-slot {
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 100%;
+      letter-spacing: 0%;
+      padding: 10px 11px;
+  }
+
+  /* carrer projection */
+  .career-projection-title {
+      margin: 40px 0 16px;
+  }
+
+  .career-projection-chart-area {
+      min-height: fit-content;
+  }
+
+  #careerProjectionChart {
+      height: 142px !important;
+  }
+
+  .career-projection-card {
+      padding: 16px;
+  }
+
+  .career-projection-header {
+      flex-direction: column;
+      gap: 16px;
+  }
+
+  .career-projection-type {
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 140%;
+      letter-spacing: 0%;
+      text-align: center;
+  }
+
+  .career-projection-legend {
+      flex-direction: row;
+      justify-content: center;
+  }
+
+  .career-projection-container,
+  .carrer-projection-percentage {
+      gap: 16px;
+  }
+
+  .projection-percentage-card {
+      padding: 32px;
+      flex-direction: column;
+      gap: 12px;
+      background: linear-gradient(30.81deg,
+              rgba(255, 255, 255, 0.1) 18.05%,
+              rgba(224, 239, 255, 0.1) 94.25%);
+  }
+
+  .gradient-yellow {
+      flex-direction: column-reverse;
+  }
+
+  .projection-percentage-circle {
+      height: 78px;
+      width: 78px;
+      flex-basis: auto;
+  }
+
+  .projection-percentage-circle svg {
+      height: 10px;
+      width: 14px;
+  }
+
+  .projection-percentage-text {
+      font-weight: 700;
+      font-size: 19.64px;
+      line-height: 23.22px;
+      letter-spacing: 0px;
+      gap: 4px;
+  }
+
+  .projection-percentage-content {
+      text-align: center;
+      width: 100%;
+  }
+
+  .percentage-title {
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 130%;
+      letter-spacing: 0%;
+  }
+
+  .percentage-desc {
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 130%;
+      letter-spacing: 0%;
+  }
+
+  /* Explore Masterclass */
+  .explore-masterclass-container {
+      margin-top: 24px;
+  }
+
+  .explore-masterclass-card {
+      flex-direction: column;
+      padding: 16px;
+      gap: 16px;
+      align-items: center;
+  }
+
+  .explore-masterclass-desc {
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 130%;
+      letter-spacing: 0%;
+      text-align: center;
+      margin-bottom: 16px;
+  }
+
+  .explore-masterclass-title {
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 130%;
+      letter-spacing: 0%;
+      text-align: center;
+      justify-content: center;
+  }
+
+  .explore-masterclass-title svg {
+      width: 17px;
+      height: 17px;
+  }
+
+  .instructor-avatar {
+      width: 41px;
+      height: 41px;
+  }
+
+  .explore-masterclass-instructors-label {
+      font-weight: 400;
+      font-size: 9.46px;
+      line-height: 148%;
+      letter-spacing: 0%;
+      padding: 8px 12px;
+      margin-left: -18px;
+  }
+
+  /* Skills and compensation */
+  .salary-uplift-title {
+      margin: 40px 0 16px;
+  }
+
+  .skills-compensation-container {
+      flex-direction: column;
+      gap: 16px;
+  }
+
+  .net-worth-potential-container {
+      padding: 24px;
+      text-align: center;
+  }
+
+  .net-worth-amt {
+      margin: 17px 0 16px;
+      font-weight: 700;
+      font-size: 20px;
+      line-height: 24px;
+      letter-spacing: 0px;
+  }
+
+  .net-worth-label-value,
+  .net-worth-label-title {
+      display: none;
+  }
+
+  .net-worth-label {
+      height: 50px;
+  }
+
+  .projected-net-worth-skills {
+      gap: 16px;
+  }
+
+  .salary-uplift-container {
+      padding: 16px;
+  }
+
+  .net-worth-skill-text {
+      text-align: left;
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 140%;
+      letter-spacing: 0px;
+      color: rgba(255, 255, 255, 0.8);
+  }
+
+  .net-worth-skill-text span {
+      font-weight: 700;
+      color: var(--white);
+  }
+
+  .projected-net-worth-container {
+      gap: 4px;
+  }
+
+  .salary-uplift-chart {
+      margin-top: 10px;
+  }
+
+  /* Recommended Courses */
+  .recommended-courses-title {
+      text-align: center;
+      font-weight: 700;
+      font-size: 16px;
+      line-height: 140%;
+      letter-spacing: 0%;
+      text-align: center;
+  }
+
+  .recommended-courses-list {
+      flex-direction: column;
+  }
+
+  .course-card {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      border-radius: 8px;
+      background: linear-gradient(180deg,
+              rgba(0, 130, 248, 0.55) 0%,
+              rgba(255, 255, 255, 0.55) 99.76%);
+  }
+
+  .course-card a {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+  }
+
+  .course-card-image {
+      width: 74px;
+      height: 71px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      flex-grow: 0;
+  }
+
+  .course-card-image img {
+      border-radius: 4px;
+  }
+
+  .course-card-arrow {
+      display: none;
+  }
+
+  .course-card-arrow-mobile {
+      display: block;
+      position: absolute;
+      right: 22px;
+      top: 12px;
+  }
+
+  .course-card-arrow-mobile svg {
+      height: 18px;
+      width: 18px;
+  }
+
+  .course-card-content {
+      margin-top: 0;
+  }
+
+  .course-card-badge {
+      display: none;
+  }
+
+  .course-card-title {
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 130%;
+      letter-spacing: 0%;
+      width: 90%;
+  }
+
+  .course-card-desc {
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 15.6px;
+      letter-spacing: 0%;
+      height: 31px;
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
+      margin-bottom: 0;
+  }
+
+  .course-card.view-all {
+      padding: 16px;
+      margin-top: 24px;
+  }
+
+  .view-all-content {
+      gap: 0;
+  }
+
+  .view-all-desc {
+      margin: 6px 0 14px;
+  }
+
+  /* IK Advantage */
+  .ik-advantage-title {
+      margin-bottom: 16px;
+  }
+
+  .net-worth-wrapper {
+      flex-direction: column;
+      gap: 16px;
+  }
+
+  #networthGrowthChart {
+      height: 200px !important;
+  }
+
+  .net-worth-container {
+      max-width: 100%;
+      min-width: auto;
+      padding: 16px;
+  }
+
+  .net-worth-header-container {
+      flex-direction: column;
+      text-align: center;
+  }
+
+  .net-growth-labels {
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      width: 100%;
+      align-self: center;
+      gap: 12px;
+  }
+
+  .net-growth-label {
+      white-space: nowrap;
+  }
+
+  .net-growth-label-text {
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 140%;
+      letter-spacing: 0px;
+      color: #ffffffb2;
+  }
+
+  .net-growth-ellipse {
+      width: 9px;
+      height: 9px;
+  }
+
+  .net-growth-indicatior-wrap svg path {
+      stroke: #ffffffb2;
+  }
+
+  .net-growth-indicatior-wrap p {
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 18px;
+      letter-spacing: 0px;
+      color: #ffffffb2;
+  }
+
+  .net-growth-indicator-container {
+      gap: 12px;
+  }
+
+  .net-worth-metric-card {
+      padding: 40px 16px;
+      height: auto;
+  }
+
+  .net-worth-metrics-row,
+  .net-worth-metrics-container {
+      height: auto;
+      gap: 8px;
+  }
+
+  .net-worth-wrapper {
+      margin-bottom: 24px;
+  }
+
+  .net-worth-metric-number {
+      font-weight: 700;
+      font-size: 32px;
+      line-height: 150%;
+      letter-spacing: -2%;
+      text-align: center;
+      margin-bottom: 10px;
+  }
+
+  .net-worth-metric-desc {
+      font-weight: 400;
+      font-size: 12px;
+      line-height: 140%;
+      letter-spacing: 0%;
+      text-align: center;
+  }
+
+  #highest-compensation {
+      font-weight: 700;
+      font-size: 29px;
+      line-height: 150%;
+      letter-spacing: -2%;
+      text-align: center;
+  }
+}
+
+@media only screen and (max-width: 375px) {
+  .chart-container {
+      margin: 0 auto;
+      width: 171px;
+      height: 171px;
+  }
+
+  .legend {
+      flex-direction: row;
+      justify-content: center;
+      margin: 20px 0;
+  }
+
+  .legend-item {
+      width: auto;
+  }
+
+  .legend-color {
+      width: 10px;
+      height: 10px;
+      margin-right: 3px;
+  }
+
+  .legend-text {
+      font-size: 10px;
+      line-height: 5.3px;
+  }
+
+  .chartjs-datalabels {
+      font-size: 10px !important;
+  }
+
+  .comp-title {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 140%;
+      /* 19.6px */
+  }
+
+  .comp-subtitle {
+      color: #dcdcdc;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 140%;
+      /* 18.2px */
+  }
+}

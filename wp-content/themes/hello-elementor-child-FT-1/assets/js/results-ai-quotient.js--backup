@@ -1,0 +1,1527 @@
+document.addEventListener("DOMContentLoaded", function () {
+//locale code
+
+function formatNumber(amount, { locale = "USA", precision = 2 } = {}) {
+    if (typeof amount !== "number") {
+      throw new Error("Amount must be a number");
+    }
+
+    const formatToFixed = (num) => Number(num.toFixed(precision));
+
+    if (locale === "India") {
+      if (amount >= 1e7) return `₹${formatToFixed(amount / 1e7)}Cr`;
+      if (amount >= 1e5) return `₹${formatToFixed(amount / 1e5)}L`;
+      if (amount >= 1e3) return `₹${formatToFixed(amount / 1e3)}k`;
+      return amount.toLocaleString("en-IN");
+    } else if (locale === "USA") {
+      if (amount >= 1e9) return `$${formatToFixed(amount / 1e9)}B`;
+      if (amount >= 1e6) return `$${formatToFixed(amount / 1e6)}M`;
+      if (amount >= 1e3) return `$${formatToFixed(amount / 1e3)}k`;
+      return amount.toLocaleString("en-US").toLocaleLowerCase();
+    } else {
+      throw new Error('Unsupported locale. Use "US" or "IN".');
+    }
+  }
+  let gaugeChart;
+  function renderGaugeChart(score) {
+   let  aiScoreValue = score;
+
+    const isMobile = window.innerWidth <= 375;
+    const ctx = document.getElementById("gaugeChart").getContext("2d");
+
+    if (gaugeChart) gaugeChart.destroy(); // destroy previous instance if exists
+
+    gaugeChart = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        datasets: [
+          {
+            data: [45, 15, 15, 25],
+            backgroundColor: ["#FFA800", "#FFC960", "#FFEB3A", "#7FE47E"],
+            borderColor: "#ffffff",
+            borderWidth: 6,
+            cutout: "83%",
+            circumference: 180,
+            rotation: 270,
+            spacing: isMobile ? 1 : 7,
+            borderRadius: 10,
+          },
+        ],
+      },
+      options: {
+        plugins: {
+          tooltip: { enabled: false },
+          legend: { display: false },
+        },
+      },
+      plugins: [
+        {
+          id: "gaugeIndicator",
+          afterDatasetsDraw(chart) {
+            const arc = chart.getDatasetMeta(0).data[0];
+            const { x: centerX, y: centerY } = arc;
+            const radius = arc.outerRadius - 5;
+
+            const textCenterY = centerY - 25;
+            const textCenterX = centerX - 10;
+
+            // Convert value (0-100) to angle (in radians) within a half-circle (180 deg)
+            const angle = Math.PI + (aiScoreValue / 100) * Math.PI;
+
+            const indicatorX = centerX + radius * Math.cos(angle);
+            const indicatorY = centerY + radius * Math.sin(angle);
+
+            const ctx = chart.ctx;
+            ctx.save();
+
+            // Big Circle
+            ctx.fillStyle = "#FFF";
+            ctx.beginPath();
+            ctx.arc(indicatorX, indicatorY, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "#FFEB3B";
+            ctx.stroke();
+
+            const mainText = isMobile
+              ? "700 46.68px Inter"
+              : "700 56px Arial";
+            const subText = isMobile ? "700 13.33px Inter" : "700 16px Inter";
+
+            // Draw main value
+            ctx.save();
+            ctx.fillStyle = "#1E1B39";
+            ctx.font = mainText;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(`${aiScoreValue}`, textCenterX, textCenterY);
+            
+            // Get metrics of the main text to position the subtext beside it
+            const metrics = ctx.measureText(`${aiScoreValue}`);
+            const mainTextWidth = metrics.width;
+            
+            // Draw "/100" beside the main text
+            ctx.font = subText;
+            ctx.textAlign = "left";
+            ctx.fillText(`/100`, textCenterX + (mainTextWidth/2) + 5, textCenterY + 12);
+            ctx.restore();
+          },
+        },
+      ],
+    });
+  }
+
+  /*button copy code*/
+
+  const copyButton = document.getElementById("copyButton"); // Select the 'Copy' button by its ID
+
+  if (copyButton) {
+    copyButton.addEventListener("click", function () {
+      //   alert('Button clicked!');  // Check if button click is detected
+      // Get the current page URL
+      const currentUrl = window.location.href;
+
+      // Use the Clipboard API to copy the URL
+      navigator.clipboard
+        .writeText(currentUrl)
+        .then(function () {
+          // Change the button text to "Copied" upon successful copy
+          copyButton.innerHTML = "Link Copied"; // Change the button text
+          copyButton.classList.add("copied"); // Optionally, add a class for styling (e.g., change the color
+        })
+        .catch(function (error) {
+          console.error("Failed to copy text: ", error);
+        });
+    });
+  }
+
+  /*share code*/
+
+  const shareButton = document.getElementById("shareButton");
+  const shareModal = document.getElementById("shareOptionsModal");
+  const currentUrl = window.location.href;
+
+  // Toggle the visibility of the modal when the share button is clicked
+  shareButton.addEventListener("click", function () {
+    const modalStyle = getComputedStyle(shareModal).display;
+
+    // If the modal is already visible, hide it
+    if (modalStyle === "block") {
+      shareModal.style.display = "none";
+    } else {
+      // Get the button's position relative to the page
+      const buttonRect = shareButton.getBoundingClientRect();
+
+      // Position the modal just below the button
+      shareModal.style.display = "block"; // Show the modal
+      shareModal.style.top = `${buttonRect.bottom + window.scrollY + 10}px`; // 10px below the button
+      shareModal.style.left = `${
+        buttonRect.left +
+        window.scrollX +
+        buttonRect.width / 2 -
+        shareModal.offsetWidth / 2
+      }px`; // Centered horizontally
+    }
+  });
+
+  // Close the modal when a share option is clicked and open the respective share link
+  document
+    .getElementById("shareFacebook")
+    .addEventListener("click", function () {
+      const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+        currentUrl
+      )}`;
+      window.open(facebookUrl, "_blank");
+      shareModal.style.display = "none"; // Hide the modal
+    });
+
+  document
+    .getElementById("shareTwitter")
+    .addEventListener("click", function () {
+      const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+        currentUrl
+      )}`;
+      window.open(twitterUrl, "_blank");
+      shareModal.style.display = "none"; // Hide the modal
+    });
+
+  document
+    .getElementById("shareWhatsApp")
+    .addEventListener("click", function () {
+      const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(
+        currentUrl
+      )}`;
+      window.open(whatsappUrl, "_blank");
+      shareModal.style.display = "none"; // Hide the modal
+    });
+
+  document
+    .getElementById("shareLinkedIn")
+    .addEventListener("click", function () {
+      const linkedInUrl = `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
+        currentUrl
+      )}`;
+      window.open(linkedInUrl, "_blank");
+      shareModal.style.display = "none"; // Hide the modal
+    });
+
+  function renderNetWorthChart(metrics) {
+    const canvas = document.getElementById("netWorthChart");
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Utility to format value
+    const formatRange = ({ lower_range, upper_range }) =>
+      `$${Math.round(lower_range / 1000)}k - $${Math.round(
+        upper_range / 1000
+      )}k`;
+
+    // Get ranges from dynamic API response
+    const current = formatRange(metrics.current_networth);
+    const same = formatRange(metrics.networth_projection_same_job);
+    const ai = formatRange(metrics.networth_projection_ai_job);
+
+    // Draw pill function
+    function drawPill(ctx, x, y, width, height, color, label) {
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.roundRect(x, y, width, height, 20);
+      ctx.fill();
+
+      ctx.fillStyle = "#fff";
+      ctx.font = "16px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(label, x + width / 2, y + height / 2);
+    }
+
+    // Add roundRect to canvas context if not already defined
+    if (!CanvasRenderingContext2D.prototype.roundRect) {
+      CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
+        if (w < 2 * r) r = w / 2;
+        if (h < 2 * r) r = h / 2;
+        this.beginPath();
+        this.moveTo(x + r, y);
+        this.arcTo(x + w, y, x + w, y + h, r);
+        this.arcTo(x + w, y + h, x, y + h, r);
+        this.arcTo(x, y + h, x, y, r);
+        this.arcTo(x, y, x + w, y, r);
+        this.closePath();
+        return this;
+      };
+    }
+
+    // Draw dynamically with positions
+    const tooltipLabelWidth = 160;
+    const tooltipLabelHeight = 40;
+    const baseY = 100;
+    const spacing = 220;
+
+    drawPill(
+      ctx,
+      150,
+      baseY,
+      tooltipLabelWidth,
+      tooltipLabelHeight,
+      "#888888",
+      current
+    );
+    drawPill(
+      ctx,
+      150 + spacing,
+      baseY,
+      tooltipLabelWidth,
+      tooltipLabelHeight,
+      "#C1C1C1",
+      same
+    );
+    drawPill(
+      ctx,
+      150 + spacing * 2,
+      baseY,
+      tooltipLabelWidth,
+      tooltipLabelHeight,
+      "#1E88E5",
+      ai
+    );
+  }
+
+  function getUUIDFromURL() {
+    const query = window.location.search;
+    return query ? query.substring(1) : null;
+  }
+
+  const uuid = getUUIDFromURL();
+  if (!uuid) return;
+
+  const shimmer = document.getElementById("shimmer-loader");
+  const results = document.getElementById("results-content");
+
+  function pollResumeStatus() {
+    fetch(`${themeVars.ajaxUrl}?action=poll_resume_analysis&uuid=${uuid}`)
+      .then((res) => res.json())
+      .then((response) => {
+        if (response.success && response.data.state === "COMPLETED") {
+          clearInterval(pollInterval);
+          clearInterval(progressInterval);
+          // Hide shimmer, show results
+          shimmer.style.display = "none";
+          results.style.display = "block";
+
+          console.log("Result Data:", response.data);
+          // Check if ai_readiness_score exists in the response
+          // ✅ NEW (correct)
+          const aiReadinessScoreData = response.data.data?.ai_readiness_score;
+          if (aiReadinessScoreData) {
+            // aiReadinessScore exists, log and process it
+            const aiReadinessScore = aiReadinessScoreData.aiReadinessScore;
+            if (aiReadinessScore !== undefined) {
+              console.log("AI Readiness Score:", aiReadinessScore); // Log the AI readiness score
+              renderGaugeChart(aiReadinessScore); // Update chart with AI readiness score
+            }
+          }
+
+          const aiReadinessSummary =
+            response.data.data?.ai_readiness_score?.summary;
+          if (aiReadinessSummary) {
+            console.log("AI Readiness Summary:", aiReadinessSummary);
+            const summaryElement = document.getElementById("ai-summary-text");
+            if (summaryElement) {
+              summaryElement.innerHTML = aiReadinessSummary; // Update the summary element
+            }
+          } else {
+            console.error("AI readiness summary not found in response");
+          }
+
+          const skill_gap_analysis =
+            response.data.data?.ai_skill_analysis?.skill_gap_analysis;
+
+          if (
+            Array.isArray(skill_gap_analysis) &&
+            skill_gap_analysis.length > 0
+          ) {
+            console.log("Skills:", skill_gap_analysis);
+
+            const skillGapListContainer = document.getElementById(
+              "result-pera-box-list"
+            );
+
+            if (skillGapListContainer) {
+              skill_gap_analysis.forEach((skill, index) => {
+                console.log("skillsloop:", skill);
+                const listItem = document.createElement("div");
+                listItem.classList.add("result-pera-box-item");
+                listItem.innerHTML = `
+                                    <img src="${
+                                      themeVars.themeUrl
+                                    }/assets/img/skills-img-${
+                  index + 1
+                }.png" alt="Skill Image" />
+                                    ${skill}
+                                `;
+                skillGapListContainer.appendChild(listItem);
+              });
+              // console.log(skillGapListContainer);
+            } else {
+              console.error("Skill gap list container not found in the DOM.");
+            }
+          } else {
+            console.error("Skill gap analysis not found or empty in response");
+          }
+          //AI road map
+
+          const aiRoadmap = response.data.data?.ai_roadmap;
+
+          if (
+            aiRoadmap &&
+            aiRoadmap["Current Role"] &&
+            aiRoadmap["Current Role"]["Job Title"]
+          ) {
+            const jobTitle = aiRoadmap["Current Role"]["Job Title"];
+            console.log("Current Job Title:", jobTitle);
+          } else {
+            console.warn("Unable to locate current job title");
+            console.log("ai_roadmap object:", aiRoadmap);
+          }
+
+          //
+
+          // Extract the data from the response
+          const metrics = response.data?.data?.precomputed_metrics;
+          console.log("Precomputed Metrics:", metrics);
+
+          currentNetworth = metrics.current_networth;
+          networthProjectionSameJob = metrics.networth_projection_same_job;
+          networthProjectionAIJob = metrics.networth_projection_ai_job;
+          country = metrics.country;
+          displayLineChart(
+            currentNetworth,
+            networthProjectionSameJob,
+            networthProjectionAIJob,
+            country
+          );
+
+          //AI enabled jobs
+
+          const aienabled = response.data?.data?.precomputed_metrics;
+          console.log("AI enabled jobs:", aienabled);
+          piechart(aienabled);
+
+          //target roles
+          const targetRolesContainer =
+            document.getElementById("role-suggested");
+          const targetRoles =
+            response.data.data?.ai_skill_analysis?.target_ai_role;
+          if (targetRolesContainer) {
+            targetRolesContainer.innerHTML = `To becoming ${targetRoles}`;
+          }
+
+          //Role Redundancy Risk
+          const roleRedundancyRiskContainer = document.getElementById(
+            "role-redundancy-risk"
+          );
+          const roleRedundancyRisk = response.data.data?.precomputed_metrics;
+          if (roleRedundancyRiskContainer) {
+            roleRedundancyRiskContainer.innerHTML = `${roleRedundancyRisk.role_redundancy_risk}`;
+          }
+          const layoffRiskContainer = document.getElementById(
+            "layoff-risk-reduction"
+          );
+          const layoffRisk = response.data.data?.precomputed_metrics;
+          if (layoffRisk) {
+            layoffRiskContainer.innerHTML = `${layoffRisk.layoff_risk_reduction}`;
+          }
+
+          //ai readdiness current score
+          const AireadnessCurrentScore = response.data.data?.precomputed_metrics;
+          const aiReadinessCurrentScoreContainer = document.getElementById(
+            "ai-readinesss"
+          );
+          if(aiReadinessCurrentScoreContainer) {
+            aiReadinessCurrentScoreContainer.innerHTML = `~${AireadnessCurrentScore.ai_readiness_after_course}<span>/100</span>`;
+          }
+
+          //increatenteworth
+
+          const IncrearenetWotrhConatiner = document.getElementById("increase-net-worth");
+          const increasNetworth = response.data.data?.precomputed_metrics.increased_net_worth_percentage;
+          if(IncrearenetWotrhConatiner) {
+            console.log("increasNetworth" ,increasNetworth);
+            IncrearenetWotrhConatiner.innerHTML = `+${increasNetworth}% from your current trajectory`;
+          }
+
+          //raadar chart
+          const  radarChartvalue = response.data.data?.ai_skill_analysis?.skills;
+          if(radarChartvalue && radarChartvalue.length > 0) {
+              let skill_names = radarChartvalue.map(skill => skill.skill_name);
+              let required_levels = radarChartvalue.map(skill => skill.required_level);
+              let current_levels = radarChartvalue.map(skill => skill.current_level);
+              console.log('Skill Names:', skill_names);
+              console.log('Required Levels:', required_levels);
+              console.log('Current Levels:', current_levels);
+              radarChart(skill_names,required_levels,current_levels)
+          }
+         
+
+          //airoadmap
+          const airoadmapResponse = response.data.data?.ai_roadmap;
+          console.log("AI Roadmap:", airoadmapResponse);
+
+          const currentjobTitleroadMap = document.getElementById("current-job-title");
+          const currentjobTitleroadMob = document.getElementById("current-job-title-mob");
+          const currentRole = airoadmapResponse["Touchpoint1"];
+          const currentjobDateDesk = document.getElementById("current-job-date");
+          const currentjobDateMob = document.getElementById("current-job-date-mobile");
+          const currentDaterange = currentRole["dateRange"];
+          if(currentjobDateDesk) {
+            currentjobDateDesk.innerHTML = currentDaterange;
+          }
+
+          if(currentjobDateMob) {
+            currentjobDateMob.innerHTML = currentDaterange;
+          }
+
+            const jobTitleRoadMap = currentRole["Job Title"];   
+            if (currentjobTitleroadMap) {
+                currentjobTitleroadMap.innerHTML = `${jobTitleRoadMap}`;
+            }
+            if (currentjobTitleroadMob) {
+                currentjobTitleroadMob.innerHTML = `${jobTitleRoadMap}`;
+            }
+           
+            const currentjobSumaryRoadMap = document.getElementById("current-job-summary");
+            const jobSummary = currentRole["Summary"];
+            if (currentjobSumaryRoadMap) {
+                currentjobSumaryRoadMap.innerHTML = `${jobSummary}`;
+            }
+
+            const currentSkiils = document.getElementById("current-skills");
+            const currentSkillsdata = currentRole["Skills"];
+            if (currentSkillsdata) { 
+                currentSkillsdata.forEach(skill => {
+                    let skills = document.createElement('div');
+                    skills.classList.add('badges');
+                    skills.innerHTML = skill;
+                    currentSkiils.appendChild(skills);
+                });
+            }
+
+            const salaryProtections = currentRole["salaryProjection"];
+            const salaryCurrency = salaryProtections["country"];
+            console.log("Salary Currency:", salaryCurrency);
+            let maxTotalComp  = formatNumber(salaryProtections["maxTotalComp"], { locale: salaryCurrency });
+            let minTotalComp =  formatNumber(salaryProtections["minTotalComp"], { locale: salaryCurrency });
+            
+            console.log("Salary Protections:", salaryProtections);
+            const salaryProtectionsContainer = document.getElementById("current-salary");
+            if(salaryProtectionsContainer) {
+                salaryProtectionsContainer.innerHTML = `${minTotalComp +" - "+ maxTotalComp}`;
+            }
+
+            const currentBased = salaryProtections["compBreakdown"]["basePercent"];
+            const bonusPerccent = salaryProtections["compBreakdown"]["bonusPercent"];
+            const stockPercent = salaryProtections["compBreakdown"]["stockPercent"];
+            
+            document.getElementById("currentbase").innerHTML = `${currentBased}%`;
+            document.getElementById("currentvarible").innerHTML = `${bonusPerccent}%`;
+            document.getElementById("currentequity").innerHTML = `${stockPercent}%`;
+
+            const oneYearRole = airoadmapResponse["Touchpoint2"];
+            console.log("One Year Role:", oneYearRole);
+            const oneyearobtitle = document.getElementById("one-year-job-title");
+            const oneyearobtitlemobile = document.getElementById("one-year-job-title-mob"); 
+            const onejobDateDesk = document.getElementById("one-year-job-date");
+            const onejobDateMob = document.getElementById("cone-year-job-date-mob");
+            const secondDaterange = oneYearRole["dateRange"];
+            if(onejobDateDesk) {
+                onejobDateDesk.innerHTML = secondDaterange;
+            }
+  
+            if(onejobDateMob) {
+                onejobDateMob.innerHTML = secondDaterange;
+            }
+            const oneYearJobTitle = oneYearRole["Job Title"];
+            if (oneyearobtitle) {
+                oneyearobtitle.innerHTML = `${oneYearJobTitle}`;
+            }
+            if (oneyearobtitlemobile) {
+                oneyearobtitlemobile.innerHTML = `${oneYearJobTitle}`;
+            }
+            const oneyearobtitleSummary = document.getElementById("one-year-job-summary");
+            const oneYearJobSummary = oneYearRole["Summary"];
+            if (oneyearobtitleSummary) {
+                oneyearobtitleSummary.innerHTML = `${oneYearJobSummary}`;
+            }
+
+            const oneyearskiils = document.getElementById("one-year-skills");
+            const oneyearSkillsdata = oneYearRole["Skills"];
+            if (oneyearSkillsdata) { 
+                oneyearSkillsdata.forEach(skill => {
+                    let skills = document.createElement('div');
+                    skills.classList.add('badges');
+                    skills.innerHTML = skill;
+                    oneyearskiils.appendChild(skills);
+                });
+            }
+
+            const salaryOneYear = oneYearRole["salaryProjection"];
+            let onemaxTotalComp  = formatNumber(salaryOneYear["maxTotalComp"], { locale: salaryCurrency });
+            let oneminTotalComp =  formatNumber(salaryOneYear["minTotalComp"], { locale: salaryCurrency });
+            
+            console.log("Salary Protections:", salaryOneYear);
+            const onesalaryProtectionsContainer = document.getElementById("one-year-salary");
+            if(onesalaryProtectionsContainer) {
+                onesalaryProtectionsContainer.innerHTML = `${oneminTotalComp +" - "+ onemaxTotalComp}`;
+            }
+
+            const onecurrentBased = salaryOneYear["compBreakdown"]["basePercent"];
+            const onebonusPercent = salaryOneYear["compBreakdown"]["bonusPercent"];
+            const onestockPercent = salaryOneYear["compBreakdown"]["stockPercent"];
+
+            
+            document.getElementById("first-year-base").innerHTML = `${onecurrentBased}%`;
+            document.getElementById("first-year-varible").innerHTML = `${onebonusPercent}%`;
+            document.getElementById("first-year-equity").innerHTML = `${onestockPercent}%`;
+            //const twoyearobtitle = document.getElementById("two-year-job-title");
+            const twoYearRole = airoadmapResponse["Touchpoint3"];
+            const thirdDaterange = twoYearRole["dateRange"];
+            const twoYearJobTitle = twoYearRole["Job Title"];
+            const twojobDateDesk = document.getElementById("sec-year-job-title");
+            const twojobDateMob = document.getElementById("sec-year-job-title-mob");
+            const secondaterange = document.getElementById("sec-year-job-date-desk");
+            const secondaterangemob = document.getElementById("sec-year-job-date-mob");
+            if (twojobDateDesk) {
+                twojobDateDesk.innerHTML = `${twoYearJobTitle}`;
+            }
+            if (twojobDateMob) {
+                twojobDateMob.innerHTML = `${twoYearJobTitle}`;
+            }
+
+            if(secondaterange) {
+                secondaterange.innerHTML = thirdDaterange;
+              }
+    
+              if(secondaterangemob) {
+                secondaterangemob.innerHTML = thirdDaterange;
+              }
+
+
+            const twoyearobtitleSummary = document.getElementById("sec-year-job-summary");
+            const twoYearJobSummary = twoYearRole["Summary"];
+            if (twoyearobtitleSummary) {
+                twoyearobtitleSummary.innerHTML = `${twoYearJobSummary}`;
+            }
+
+            const secYearSkiils = document.getElementById("sec-year-skills");
+            const secyearSkiilsData = twoYearRole["Skills"];
+            if (secyearSkiilsData) { 
+                secyearSkiilsData.forEach(skill => {
+                    let skills = document.createElement('div');
+                    skills.classList.add('badges','success');
+                    skills.innerHTML = skill;
+                    secYearSkiils.appendChild(skills);
+                });
+            }
+
+            const salarytwoYear = twoYearRole["salaryProjection"];
+            let twomaxTotalComp  = formatNumber(salarytwoYear["maxTotalComp"], { locale: salaryCurrency });
+            let twominTotalComp =  formatNumber(salarytwoYear["minTotalComp"], { locale: salaryCurrency });
+            
+            const twosalaryProtectionsContainer = document.getElementById("second-year-salary-title");
+            if(twosalaryProtectionsContainer) {
+                twosalaryProtectionsContainer.innerHTML = `${twominTotalComp +" - "+ twomaxTotalComp}`;
+            }
+
+
+
+            const currentProfle = response.data.data?.ai_roadmap?.percentage_increase_in_salary;
+            const currentProfileContainer = document.getElementById("reading-card-span-id");
+            if (currentProfileContainer) {
+                currentProfileContainer.innerHTML = `+${currentProfle}% from your current profile`;
+            }
+
+      
+            
+            // Render into the DOM
+            // const skillsContainer = document.getElementById("all-roadmap-skills");
+            // if (skillsContainer) {
+            //   skillsContainer.innerHTML = ""; // Clear old content
+            //   allSkills.forEach(skill => {
+            //     const li = document.createElement("li");
+            //     li.textContent = skill;
+            //     skillsContainer.appendChild(li);
+            //   });
+            // }
+
+          // Get the API response for name
+          const apiName = response.data.data?.name; // from your actual API result
+
+          let fullName = "";
+
+          // Check the value of apiName
+          console.log("API name:", apiName);
+
+          if (apiName && apiName.trim() !== "") {
+            fullName = apiName.trim();
+          } else {
+            const localStorageName = localStorage.getItem("webinar_user_name");
+            console.log("LocalStorage name:", localStorageName);
+
+            if (localStorageName && localStorageName.trim() !== "") {
+              fullName = localStorageName.trim();
+            }
+          }
+
+          console.log("Full Name to use:", fullName); // Debugging the final name value
+
+          if (fullName) {
+            const nameParts = fullName.split(" ");
+            const firstName = nameParts[0] || "";
+            const lastName = nameParts.slice(1).join(" ") || "";
+
+            console.log("First Name:", firstName); // Check first name
+            console.log("Last Name:", lastName); // Check last name
+
+            const experience =
+              response.data.data?.ai_skill_analysis?.experience_years; // Get the experience years from the API
+            const fname = document.getElementById("fname");
+            const finame = document.getElementById("finame");
+            const name3 = document.getElementById("name3");
+
+            if (fname) {
+              fname.innerHTML = `${firstName} ${lastName}'s ${experience}-year <span>Personalized Career Roadmap</span>`;
+            }
+
+            if (finame) {
+              finame.innerHTML = `${firstName} ${lastName}'s earning potential with <span>AI skills</span>`;
+            }
+
+            if (name3) {
+              name3.innerHTML = `IK courses <span>recommended for ${firstName} ${lastName}</span>`;
+            }
+            const firstSpan = document.getElementById("first-name");
+            const lastSpan = document.getElementById("last-name");
+
+            if (firstSpan) firstSpan.textContent = firstName;
+
+            if (lastSpan) lastSpan.textContent = lastName;
+          } else {
+            console.log("No name found!");
+          }
+        } else {
+          console.error("Response state is not COMPLETED or success is false");
+        }
+      })
+      .catch((err) => console.error("Polling error:", err));
+  }
+
+  pollResumeStatus();
+// Then poll every 2 seconds
+const pollInterval = setInterval(pollResumeStatus, 2000);
+
+  //let progressChartInstance = null; // Track the chart instance
+
+  function updateProgressChart(percentage) {
+    const canvas = document.getElementById("progressChart");
+    if (!canvas) return;
+
+    // ✅ SAFELY DESTROY any chart on this canvas
+    const existingChart = Chart.getChart(canvas);
+    if (existingChart) {
+      existingChart.destroy();
+    }
+
+    // 🎯 Create the new chart
+    const ctxProgress = document
+      .getElementById("progressChart")
+      .getContext("2d");
+    const offset = 8;
+
+    function easeOutQuart(t) {
+      return 1 - Math.pow(1 - t, 4);
+    }
+
+    let animationProgress = 0;
+
+    new Chart(ctxProgress, {
+      type: "doughnut",
+      data: {
+        datasets: [
+          {
+            data: [percentage, 100 - percentage],
+            backgroundColor: ["#3D9FF7", "#dbeaff"],
+            borderWidth: 0,
+            cutout: "80%",
+          },
+        ],
+      },
+      options: {
+        responsive: false,
+        animation: {
+          duration: 1500,
+          easing: "easeOutQuart",
+          onProgress: (animation) => {
+            const rawProgress = animation.currentStep / animation.numSteps;
+            animationProgress = easeOutQuart(rawProgress); // Apply same easing
+            animation.chart.draw(); // Redraw for dashed arc
+          },
+        },
+        layout: {
+          padding: offset,
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false },
+        },
+      },
+      plugins: [
+        {
+          id: "customElements",
+          afterDraw(chart) {
+            const { ctx } = chart;
+            const x = chart.width / 2;
+            const y = chart.height / 2;
+            const radius = Math.min(chart.width, chart.height) / 2 - 2;
+
+            const maxAngle = (percentage / 100) * 2 * Math.PI;
+            const animatedAngle = -Math.PI / 2 + animationProgress * maxAngle;
+
+            // Percentage Text
+            ctx.save();
+            ctx.font = "bold 16px Lato";
+            ctx.fillStyle = "#3D9FF7";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(`${percentage}%`, x, y);
+            ctx.restore();
+
+            // Dashed Arc
+            ctx.save();
+            ctx.beginPath();
+            ctx.setLineDash([5, 5]);
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "#3D9FF7";
+            ctx.arc(x, y, radius, -Math.PI / 2, animatedAngle);
+            ctx.stroke();
+            ctx.restore();
+          },
+        },
+      ],
+    });
+  }
+
+  let progressValue = 30; // Start from 30%
+  const progressValues = [90]; // The sequence of progress values
+  let progressIndex = 0; // Start from the first value in the sequence
+
+  const progressInterval = setInterval(() => {
+    if (progressIndex < progressValues.length) {
+      progressValue = progressValues[progressIndex];
+      progressIndex++; // Move to the next value in the sequence
+    } else {
+      progressValue = 90; // Hold at 90% after the sequence ends
+    }
+
+    updateProgressChart(progressValue); // Update the chart with the new progress value
+  }, 2000); // Update every 2 seconds
+  simulateLoadingProgress();
+
+  function simulateLoadingProgress() {
+    updateProgressChart(30);
+    setTimeout(() => updateProgressChart(60), 2000);
+    setTimeout(() => updateProgressChart(90), 4000);
+    // Leave it at 90% until data is fully rendered
+  }
+
+  function displayLineChart(
+    currentNetworth,
+    networthProjectionSameJob,
+    networthProjectionAIJob,
+    country
+  )
+   {
+    
+
+    function generateDataPoints(maxValue) {
+      const ratios = [0.112, 0.18, 0.28, 0.408, 0.58, 0.8, 1.0]; // Smooth curve ratios
+      return ratios.map((ratio) => Math.round(maxValue * ratio));
+    }
+    const ctxForLine = document
+      .getElementById("netWorthChart")
+      .getContext("2d");
+    const labels = ["2025", "2026", "2027", "2028", "2029", "2030", "2031"];
+    const isMobile = window.innerWidth <= 375;
+
+    // Values to display in the gray box
+    const CURRENT_VALUE_LOWER = currentNetworth.lower_range;
+    const CURRENT_VALUE_UPPER = currentNetworth.upper_range;
+
+    // Values to plot the lines for the AI-Enhanced and Non-AI lines
+    const MIN_VALUE_NON_AI = networthProjectionSameJob.lower_range;
+    const MAX_VALUE_NON_AI = networthProjectionSameJob.upper_range;
+
+    const MIN_VALUE_AI = networthProjectionAIJob.lower_range;
+    const MAX_VALUE_AI = networthProjectionAIJob.upper_range;
+
+    const data = {
+      labels: labels,
+      datasets: [
+        {
+          label: "AI-Enhanced",
+          data: generateDataPoints(MAX_VALUE_AI),
+          borderColor: "#1E88E5",
+          backgroundColor: "#0082F8",
+          fill: false,
+          tension: 0.5,
+          pointRadius: [0, 0, 0, 0, 0, 0, 0],
+          pointBackgroundColor: "#1E88E5",
+          borderWidth: isMobile ? 1 : 2,
+        },
+        {
+          label: "Non-AI",
+          data: generateDataPoints(MAX_VALUE_NON_AI),
+          borderColor: "#90A4AE",
+          backgroundColor: "#90A4AE",
+          fill: false,
+          tension: 0.5,
+          pointRadius: [0, 0, 0, 0, 0, 0, 0],
+          pointBackgroundColor: "#90A4AE",
+          borderWidth: isMobile ? 1 : 2,
+        },
+      ],
+    };
+
+    const customLabelPlugin = {
+      id: "customLabel",
+      afterDatasetsDraw(chart) {
+        const { ctx, scales } = chart;
+
+        const labelText = `${formatNumber(
+          CURRENT_VALUE_LOWER,{locale: country}
+        )} - ${formatNumber(CURRENT_VALUE_UPPER,{locale: country})}`;
+        const topText = "You're here";
+
+        const labelX = scales.x.getPixelForValue("2025") + (isMobile ? 40 : 65);
+        const labelY =
+          scales.y.getPixelForValue(CURRENT_VALUE_LOWER) - (isMobile ? 10 : 15);
+
+        const boxWidth = isMobile ? 80 : 135;
+        const boxHeight = isMobile ? 36 : 53;
+        const pointerHeight = isMobile ? 10 : 19;
+        const pointerWidth = isMobile ? 11 : 24;
+        const borderRadius = isMobile ? 5 : 10;
+
+        const boxX = labelX - boxWidth / 2; // Make this dynamic using scales.x.getPixelForValue
+        const boxY = labelY - boxHeight - pointerHeight; // Make this dynamic using scales.y.getPixelForValue
+
+        ctx.save();
+        ctx.fillStyle = "#C1C1C1";
+        ctx.beginPath();
+
+        // Draw "You're here" box
+        if (isMobile) {
+          const pointerBaseX = boxX;
+
+          // Right side rounded corner remains
+          ctx.lineTo(boxX + boxWidth - borderRadius, boxY + boxHeight);
+          ctx.quadraticCurveTo(
+            boxX + boxWidth,
+            boxY + boxHeight,
+            boxX + boxWidth,
+            boxY + boxHeight - borderRadius
+          );
+
+          // Continue with the rest of the right side
+          ctx.lineTo(boxX + boxWidth, boxY + borderRadius);
+          ctx.quadraticCurveTo(
+            boxX + boxWidth,
+            boxY,
+            boxX + boxWidth - borderRadius,
+            boxY
+          );
+
+          // Top of the box
+          ctx.lineTo(boxX + borderRadius, boxY);
+          ctx.quadraticCurveTo(boxX, boxY, boxX, boxY + borderRadius);
+
+          ctx.lineTo(boxX, boxY + boxHeight - borderRadius);
+          ctx.lineTo(boxX, boxY + boxHeight);
+
+          // Draw right-angled triangle pointer with a rounded tip
+          const triangleBaseLeftX = boxX;
+          const triangleBaseLeftY = boxY + boxHeight;
+          const triangleBaseRightX = boxX + pointerWidth - 3;
+          const triangleBaseRightY = boxY + boxHeight;
+          const triangleTipX = boxX;
+          const triangleTipY = boxY + boxHeight + pointerHeight;
+          const tipRadius = 2;
+
+          ctx.lineTo(triangleTipX, triangleTipY - tipRadius);
+          ctx.arc(
+            triangleTipX + tipRadius,
+            triangleTipY - tipRadius,
+            tipRadius,
+            Math.PI,
+            Math.PI / 2,
+            true
+          );
+          ctx.lineTo(triangleBaseRightX, triangleBaseRightY);
+
+          ctx.closePath();
+        } else {
+          ctx.moveTo(boxX + borderRadius, boxY);
+          ctx.lineTo(boxX + boxWidth - borderRadius, boxY);
+          ctx.quadraticCurveTo(
+            boxX + boxWidth,
+            boxY,
+            boxX + boxWidth,
+            boxY + borderRadius
+          );
+          ctx.lineTo(boxX + boxWidth, boxY + boxHeight - borderRadius);
+          ctx.quadraticCurveTo(
+            boxX + boxWidth,
+            boxY + boxHeight,
+            boxX + boxWidth - borderRadius,
+            boxY + boxHeight
+          );
+
+          // Pointer - positioned to match design
+          const pointerOffsetX = 45;
+          const pointerBaseX = labelX - pointerOffsetX;
+          const triangleBaseY = boxY + boxHeight;
+          const triangleTipY = triangleBaseY + pointerHeight;
+          const tipRadius = 2;
+
+          // Start from right side of triangle base
+          ctx.lineTo(pointerBaseX + pointerWidth / 2, triangleBaseY);
+
+          // Draw right edge of triangle down to just above tip (right side)
+          ctx.lineTo(pointerBaseX + tipRadius, triangleTipY - tipRadius);
+
+          // Curve the bottom tip
+          ctx.quadraticCurveTo(
+            pointerBaseX,
+            triangleTipY, // control point (at the tip)
+            pointerBaseX - tipRadius,
+            triangleTipY - tipRadius // end at left side above tip
+          );
+
+          // Draw left edge of triangle up to left base
+          ctx.lineTo(pointerBaseX - pointerWidth / 2, triangleBaseY);
+
+          ctx.lineTo(boxX + borderRadius, boxY + boxHeight);
+          ctx.quadraticCurveTo(
+            boxX,
+            boxY + boxHeight,
+            boxX,
+            boxY + boxHeight - borderRadius
+          );
+          ctx.lineTo(boxX, boxY + borderRadius);
+          ctx.quadraticCurveTo(boxX, boxY, boxX + borderRadius, boxY);
+          ctx.closePath();
+        }
+
+        ctx.fill();
+
+        // Top text
+        ctx.fillStyle = "#FFFFFF";
+        ctx.font = isMobile
+          ? "400 8px Inter, sans-serif"
+          : "400 11px Inter, sans-serif";
+
+        const topTextWidth = ctx.measureText(topText).width;
+        // position of top text inside the box
+        ctx.fillText(
+          topText,
+          labelX - topTextWidth / 2 - (isMobile ? 10 : 25),
+          boxY + (isMobile ? 13 : 20)
+        );
+
+        // Bottom bold text
+        ctx.font = isMobile
+          ? "400 11px Inter, sans-serif"
+          : "700 16px Inter, sans-serif";
+        const labelTextWidth = ctx.measureText(labelText).width;
+        // position of bottom text inside the box
+        ctx.fillText(
+          labelText,
+          labelX - topTextWidth / 2 - (isMobile ? 10 : 25),
+          boxY + (isMobile ? 28 : 40)
+        );
+
+        const XlabelPosOffset = isMobile ? 100 : 135;
+        const YlabelPosOffset = isMobile ? 23 : 23;
+
+        // Calculate position to ensure labels are fully visible
+        // So that the labels are not cut off at the top
+        const calculateLabelPosition = (yValue, padding = 10) => {
+          const chartTop = chart.chartArea.top;
+          const yPos = scales.y.getPixelForValue(yValue);
+          const tooltipHeight = 0;
+
+          // If the label would be too close to the top
+          if (yPos - YlabelPosOffset < chartTop + padding) {
+            return yPos - (yPos - chartTop - padding + 10);
+          }
+
+          return yPos - YlabelPosOffset;
+        };
+
+        // Blue AI-Enhanced end value badge
+        const aiX = scales.x.getPixelForValue("2031") - XlabelPosOffset;
+        const aiY = calculateLabelPosition(MAX_VALUE_AI);
+        const aiLabel = `${formatNumber(MIN_VALUE_AI,{locale: country})} - ${formatNumber(
+          MAX_VALUE_AI,{locale: country}
+        )}`;
+
+        // Grey Non-AI end value badge
+        const nonAiX = scales.x.getPixelForValue("2031") - XlabelPosOffset;
+        const nonAiY = calculateLabelPosition(MAX_VALUE_NON_AI);
+        const nonAiLabel = `${formatNumber(MIN_VALUE_NON_AI,{locale: country})} - ${formatNumber(
+          MAX_VALUE_NON_AI,{locale: country}
+        )}`;
+
+        const tooltipLabelWidth = isMobile ? 90 : 115;
+        const tooltipLabelHeight = isMobile ? 23 : 36;
+
+        drawPill(
+          ctx,
+          nonAiX,
+          nonAiY,
+          tooltipLabelWidth,
+          tooltipLabelHeight,
+          "#C1C1C1",
+          nonAiLabel
+        );
+
+        drawPill(
+          ctx,
+          aiX,
+          aiY,
+          tooltipLabelWidth,
+          tooltipLabelHeight,
+          "#1E88E5",
+          aiLabel
+        );
+
+        ctx.restore();
+      },
+    };
+
+    function drawPill(ctx, x, y, width, height, color, text) {
+      const borderRadius = isMobile ? 2 : 8;
+      const pointerWidth = isMobile ? 10 : 14;
+      const pointerHeight = isMobile ? 12 : 16;
+
+      const fontStyle = isMobile
+        ? "400 11px Inter, sans-serif"
+        : "700 14px Inter, sans-serif";
+
+      // Updated gradient for blue
+      if (color === "#1E88E5") {
+        // Create a horizontal gradient from left to right (90.69deg equivalent)
+        const gradient = ctx.createLinearGradient(x, y, x + width, y);
+        gradient.addColorStop(0.2659, "#0134DA"); // 26.59%
+        gradient.addColorStop(0.968, "#61B0F7"); // 96.8%
+        ctx.fillStyle = gradient;
+      } else {
+        ctx.fillStyle = color;
+      }
+
+      ctx.beginPath();
+      ctx.moveTo(x + borderRadius, y);
+      ctx.lineTo(x + width - borderRadius, y);
+      ctx.quadraticCurveTo(x + width, y, x + width, y + borderRadius);
+      ctx.lineTo(x + width, y + height / 2 - pointerHeight / 2);
+
+      // Draw triangle pointer with straight lines and rounded tip
+      const triangleBaseY = y + height / 2 - pointerHeight / 2;
+      const triangleTipX = x + width + pointerWidth;
+      const triangleTipY = y + height / 2;
+      const tipRadius = isMobile ? 1 : 2;
+
+      // Right edge of triangle
+      ctx.lineTo(triangleTipX - tipRadius, triangleTipY - tipRadius);
+      // Arc for rounded tip
+      ctx.arc(
+        triangleTipX - tipRadius,
+        triangleTipY,
+        tipRadius,
+        -Math.PI / 2,
+        Math.PI / 2,
+        false
+      );
+      // Left edge of triangle
+      ctx.lineTo(x + width, y + height / 2 + pointerHeight / 2);
+
+      ctx.lineTo(x + width, y + height - borderRadius);
+      ctx.quadraticCurveTo(
+        x + width,
+        y + height,
+        x + width - borderRadius,
+        y + height
+      );
+
+      ctx.lineTo(x + borderRadius, y + height);
+      ctx.quadraticCurveTo(x, y + height, x, y + height - borderRadius);
+      ctx.lineTo(x, y + borderRadius);
+      ctx.quadraticCurveTo(x, y, x + borderRadius, y);
+      ctx.closePath();
+      ctx.fill();
+
+      // Draw label text
+      ctx.fillStyle = "#FFFFFF";
+      ctx.font = fontStyle;
+      const textWidth = ctx.measureText(text).width;
+      const yOffset = isMobile ? 4 : 5;
+      ctx.fillText(text, x + (width - textWidth) / 2, y + height / 2 + yOffset);
+    }
+
+    const config = {
+      type: "line",
+      data: data,
+      options: {
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+          },
+        },
+        scales: {
+          x: {
+            offset: true,
+            ticks: {
+              color: isMobile ? "#9291A5" : "#615E83",
+              font: {
+                size: isMobile ? 11 : 16,
+              },
+              padding: isMobile ? 0 : 8,
+              align: "end",
+            },
+            grid: {
+              display: false,
+              drawBorder: false,
+              drawOnChartArea: true,
+              drawTicks: false,
+              borderWidth: 0,
+              borderColor: "transparent",
+            },
+            border: {
+              display: false,
+            },
+            offset: false,
+          },
+          y: {
+            ticks: {
+              color: isMobile ? "#9291A5" : "#615E83",
+              font: {
+                size: isMobile ? 11 : 16,
+              },
+              callback: function (value) {
+                if (value === 0) {
+                  return "0";
+                }
+                return formatNumber(value, { locale:country,precision: 0 });
+              },
+              drawOnChartArea: true,
+              crossAlign: "far",
+              padding: isMobile ? 5 : 10,
+              align: "center",
+              maxTicksLimit: 5,
+            },
+            grid: {
+              color: "#E5E5E5",
+              drawBorder: false,
+              drawTicks: false,
+              tickLength: 0,
+              borderWidth: 0,
+            },
+            border: {
+              display: false,
+            },
+            align: "start",
+            position: "left",
+            offset: true,
+            afterFit: function (scale) {
+              scale.paddingTop = 0;
+              scale.paddingBottom = 0;
+            },
+          },
+        },
+      },
+      plugins: [customLabelPlugin],
+    };
+
+    new Chart(ctxForLine, config);
+  }
+
+  function piechart(aienabled) {
+    const ctxForPie = document.getElementById("myChart").getContext("2d");
+    const isMobileForPie = window.innerWidth <= 375;
+
+    const image = new Image();
+    image.src = themeVars.themeUrl + "/assets/img/pie-chart-img.svg";
+
+    const blueGradient = ctxForPie.createLinearGradient(0, 0, 220, 0);
+    blueGradient.addColorStop(0.0103, "#0134DA");
+    blueGradient.addColorStop(0.957, "#61B0F7");
+
+    // Custom plugin to draw centered percentage labels
+    const centerLabelPlugin = {
+      id: "centerLabelPlugin",
+      afterDatasetsDraw(chart) {
+        const { ctx, chartArea } = chart;
+        const centerY = (chartArea.top + chartArea.bottom) / 2;
+
+        chart.data.datasets.forEach((dataset, i) => {
+          const meta = chart.getDatasetMeta(i);
+          meta.data.forEach((arc, index) => {
+            const { x } = arc.getCenterPoint();
+            const value = dataset.data[index] + "%";
+
+            ctx.save();
+            ctx.fillStyle = index === 1 ? "#3576EA" : "#FFFFFF";
+            if (window.innerWidth > 375) {
+              ctx.font = "bold 13px Arial, sans-serif"; // TODO: add font family
+            } else {
+              ctx.font = "bold 10px Arial, sans-serif";
+            }
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(value, x, centerY);
+            ctx.restore();
+          });
+        });
+      },
+    };
+
+    image.onload = function () {
+      const chart = new Chart(ctxForPie, {
+        type: "doughnut",
+        data: {
+          labels: ["AI-Enabled Jobs", "Non-AI Jobs"],
+          datasets: [
+            {
+              // data: [55, 45],
+              data: [
+                aienabled.ai_job_market_share_5_years,
+                100 - aienabled.ai_job_market_share_5_years,
+              ],
+              backgroundColor: [blueGradient, "#EDF6FF"],
+              spacing: 6,
+              borderRadius: 5,
+              borderWidth: 0,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: true,
+          plugins: {
+            legend: {
+              display: false,
+            },
+            datalabels: {
+              display: false,
+            },
+            annotation: {
+              annotations: {
+                centerImage: {
+                  type: "doughnutLabel",
+                  content: image,
+                  width: isMobileForPie ? 40 : 51,
+                  height: isMobileForPie ? 40 : 51,
+                },
+              },
+            },
+          },
+          cutout: "60%",
+        },
+        plugins: [centerLabelPlugin],
+      });
+    };
+  }
+
+  function radarChart(skill_names,required_levels,current_levels) {
+    const ctx = document.getElementById("radarChart").getContext("2d");
+
+    const isMobileForRadar = window.innerWidth <= 375;
+
+    // Get canvas dimensions
+    const width = ctx.canvas.width;
+    const height = ctx.canvas.height;
+
+    // Create gray gradient
+    const grayGradient = ctx.createRadialGradient(
+      width * 0.5581, // 55.81% of width
+      height * 0.5179, // 51.79% of height
+      0,
+      width * 0.5581,
+      height * 0.5179,
+      Math.max(width * 0.3798, height * 0.3889) // 37.98% and 38.89% of dimensions
+    );
+    grayGradient.addColorStop(0, "rgba(217, 217, 217, 0.3)");
+    grayGradient.addColorStop(1, "rgba(185, 185, 185, 0.3)");
+
+    // Create custom plugin to handle complex gradient
+    const complexGradientPlugin = {
+      id: "complexGradient",
+      beforeDatasetsDraw: function (chart, args, options) {
+        if (!chart.data.datasets[0]) return;
+
+        const ctx = chart.ctx;
+        const chartArea = chart.chartArea;
+
+        // Get the points of the first dataset polygon
+        const meta = chart.getDatasetMeta(0);
+        if (meta.hidden || !meta.data || meta.data.length === 0) return;
+
+        const points = meta.data.map((point) => ({
+          x: point.x,
+          y: point.y,
+        }));
+
+        // Save current state
+        ctx.save();
+
+        // Create clipping path from dataset points
+        ctx.beginPath();
+        points.forEach((point, index) => {
+          if (index === 0) {
+            ctx.moveTo(point.x, point.y);
+          } else {
+            ctx.lineTo(point.x, point.y);
+          }
+        });
+        ctx.closePath();
+        ctx.clip();
+
+        // Apply a deeper blue semi-transparent fill
+        ctx.fillStyle = "rgba(61, 125, 225, 0.5)";
+        ctx.fill();
+
+        // Add a horizontal gradient overlay
+        const gradient = ctx.createLinearGradient(
+          chartArea.left,
+          0,
+          chartArea.right,
+          0
+        );
+        gradient.addColorStop(0, "rgba(0, 95, 181, 0.5)");
+        gradient.addColorStop(1, "rgba(97, 176, 247, 0.5)");
+
+        ctx.fillStyle = gradient;
+        ctx.globalCompositeOperation = "source-atop";
+        ctx.fillRect(
+          chartArea.left,
+          chartArea.top,
+          chartArea.right - chartArea.left,
+          chartArea.bottom - chartArea.top
+        );
+
+        // Restore context
+        ctx.restore();
+      },
+    };
+
+    let myRadarChart = new Chart(ctx, {
+      type: "radar",
+      plugins: [complexGradientPlugin],
+      data: {
+        labels: skill_names,
+        datasets: [
+          {
+            label: "Your skill graph",
+            data: current_levels,
+            backgroundColor: "rgba(0, 0, 0, 0)",
+            borderColor: "#0047CA",
+            borderWidth: 1.2,
+            pointRadius: 0,
+          },
+          {
+            label: "Skill graph required for your level",
+            data: required_levels,
+            backgroundColor: grayGradient,
+            borderColor: "rgba(186, 186, 186, 1)",
+            borderWidth: 1.2,
+            pointRadius: 0,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: {
+          padding: 0,
+        },
+        scales: {
+          r: {
+            min: 0,
+            max: 100,
+            angleLines: {
+              display: true,
+              color: "#BFBFBF",
+            },
+            ticks: {
+              display: false,
+              stepSize: 20,
+              padding: 0,
+            },
+            pointLabels: {
+              font: {
+                family: "Inter, sans-serif", // update font family
+                size: 10,
+                weight: 700,
+                lineHeight: 1.5,
+              },
+              padding: 0,
+              color: "#000000",
+              align: "center",
+              callback: function (label) {
+                // wrap label if too long
+                const maxChars = 11; // Adjust as needed
+                if (label.length > maxChars) {
+                  const words = label.split(" ");
+                  let line = "";
+                  let newLabel = [];
+                  words.forEach((word) => {
+                    if ((line + word).length <= maxChars) {
+                      line += word + " ";
+                    } else {
+                      newLabel.push(line);
+                      line = word + " ";
+                    }
+                  });
+                  newLabel.push(line);
+                  return newLabel;
+                }
+                return label;
+              },
+            },
+            grid: {
+              color: "#BFBFBF",
+              lineWidth: 0.5,
+            },
+            beginAtZero: false,
+            offset: false,
+          },
+        },
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+      },
+    });
+  }
+});
