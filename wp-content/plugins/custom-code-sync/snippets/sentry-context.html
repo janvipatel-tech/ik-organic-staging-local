@@ -1,0 +1,47 @@
+<!--CCS-META
+{
+    "slug": "sentry-context",
+    "title": "sentry context",
+    "status": "publish",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+<!-- sentry-context -->
+<script>
+  function setSentryUser() {
+    try {
+      if (typeof Sentry !== 'undefined' && 
+          typeof Sentry.isEnabled === 'function' && 
+          Sentry.isEnabled() && 
+          Sentry.setUser && 
+          typeof Sentry.setUser === 'function') {
+        Sentry.setUser({
+          id: typeof visitor_id !== 'undefined' ? visitor_id : null,
+        });
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error setting Sentry user:', error);
+      return false;
+    }
+  }
+
+  if (typeof window !== 'undefined') {
+    window.addEventListener('sentryInitialized', function() {
+      setSentryUser();
+    });
+    
+    // Fallback: If event already fired (race condition) or Sentry is already initialized
+    if (typeof Sentry !== 'undefined' && typeof Sentry.isEnabled === 'function' && Sentry.isEnabled()) {
+      setSentryUser();
+    }
+  }
+</script>

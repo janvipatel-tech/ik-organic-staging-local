@@ -1,0 +1,46 @@
+<!--CCS-META
+{
+    "slug": "post-reading-time-count-abir",
+    "title": "Post Reading Time Count - Abir",
+    "status": "publish",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+<script>
+//  const WPM = 183; 
+//     const contentElementReadingTime = document.querySelector(".reading_time_count_content");
+//     const readingTimeContainer = document.querySelector(".reading-time-custom");
+
+//     if (contentElementReadingTime && readingTimeContainer) {
+//         const textContent = contentElementReadingTime.innerText || contentElementReadingTime.textContent; 
+//         const wordCount = textContent.trim().split(/\s+/).length; 
+//         const readingTimeMinutes = Math.ceil(wordCount / WPM); 
+
+//         readingTimeContainer.textContent = ` | Reading Time: ${readingTimeMinutes} minute${readingTimeMinutes > 1 ? 's' : ''}`;
+//     }
+document.addEventListener("DOMContentLoaded", () => {
+    const WPM = 183;
+    const contentElementReadingTime = document.querySelector(".reading_time_count_content");
+    const readingTimeContainers = document.querySelectorAll(".reading-time-custom");
+
+    if (contentElementReadingTime && readingTimeContainers.length > 0) {
+        const textContent = contentElementReadingTime.innerText || contentElementReadingTime.textContent;
+        const wordCount = textContent.trim().split(/\s+/).length;
+        const readingTimeMinutes = Math.ceil(wordCount / WPM);
+
+        const readingTimeText = ` | Reading Time: ${readingTimeMinutes} minute${readingTimeMinutes > 1 ? 's' : ''}`;
+
+        readingTimeContainers.forEach(container => {
+            container.textContent = readingTimeText;
+        });
+    }
+});
+
+</script>

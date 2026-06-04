@@ -1,0 +1,69 @@
+<!--CCS-META
+{
+    "slug": "get-tech-popup",
+    "title": "Get tech Popup",
+    "status": "publish",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_head",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+<script>
+    let blogPopupShown = false;
+    window.addEventListener("DOMContentLoaded", function () {
+				const body = document.body;
+				if(body.classList.contains("error404"))
+					{
+						return;
+					}
+        const getTechPoup = document.querySelector(".get_tech_popup");
+
+        if(!getTechPoup) return;
+
+        try {
+            function getPopUpDelay() {
+                let delay = 10000;
+                uuid = getCookie("unique_visitor_id6") || "";
+                const trimmedUuid = uuid.slice(0, 50);
+                const lastTwoDigits = parseInt(trimmedUuid.slice(-2)); // Defaults to base 10
+                isVarient = lastTwoDigits >= weightageOfVariant;
+
+                return isVarient ? 20000 : delay
+            }
+
+            const delayTime = getPopUpDelay();
+            console.log("PA DT: ", delayTime);
+
+            setTimeout(() => {
+                const webinarLightbox = document.querySelector(".webinar__lightbox");
+                if (getTechPoup.getAttribute("show_status") === "false") {
+                    // Open the popup
+                    if(location.pathname.includes("/blogs/")){
+                        getTechPoup.setAttribute("show_status", false);
+                        blogPopupShown = false;
+                    }
+                }
+            }, delayTime);
+
+            // Add event listeners to close the popup
+            const closeElements = [
+                document.querySelector(".get_tech_popup_close"),
+                document.querySelector(".webinar_reg_btn_get")            
+            ];
+        
+            closeElements.forEach((element) => {
+                element.addEventListener("click", () => {
+                    getTechPoup.setAttribute("show_status", false);
+                });
+            });
+        } catch (error) {
+        console.error(error);
+        }
+      })
+
+</script>

@@ -1,0 +1,65 @@
+<!--CCS-META
+{
+    "slug": "header-timer-show-and-hide",
+    "title": "Header timer Show and Hide",
+    "status": "publish",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general",
+            "include/general",
+            "include/singular/page/1133",
+            "include/singular/page/25642",
+            "include/singular/page/1130",
+            "include/singular/page/22180",
+            "include/singular/page/22181",
+            "include/singular/page/22071",
+            "include/singular/page/17902",
+            "include/singular/page/17845",
+            "include/singular/page/8819",
+            "include/singular/page/8757",
+            "include/singular/page/8711",
+            "include/singular/page/8694",
+            "include/singular/page/8629",
+            "include/singular/page/8356",
+            "include/singular/page/8208",
+            "include/singular/page/8057",
+            "include/singular/page/7806",
+            "include/singular/page/7594",
+            "include/singular/page/7581",
+            "include/singular/page/7495",
+            "include/singular/page/7371",
+            "include/singular/page/7372",
+            "include/singular/page/7260",
+            "include/singular/page/7256",
+            "include/singular/page/7180",
+            "include/singular/page/6557",
+            "include/singular/page/6406",
+            "include/singular/page/5911"
+        ],
+        "_elementor_location": "elementor_head",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+<script>
+jQuery(document).ready(function($) {
+    // Apply the scroll effect on all pages
+    $(window).scroll(function() {
+        // Check if we have scrolled more than 500px
+        if ($(this).scrollTop() > 250) {
+            // Show the .hedr_show div after scrolling 500px
+            $('.hedr_show').fadeIn(); // You can also use .css('opacity', '1') if you prefer
+            // Optionally, you can add a class to the body or other elements, if needed
+            $('body').addClass('header-scrolled');
+        } else {
+            // Hide the .hedr_show div if less than 500px
+            $('.hedr_show').fadeOut(); // You can also use .css('opacity', '0') if you prefer
+            $('body').removeClass('header-scrolled');
+        }
+    });
+
+    // Ensure the .hedr_show section is initially hidden (in case the page is already scrolled)
+    $('.hedr_show').hide();  // Ensure it is hidden by default
+});
+</script>

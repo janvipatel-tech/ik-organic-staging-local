@@ -1,0 +1,43 @@
+<!--CCS-META
+{
+    "slug": "lpv1-single-post-slider-abir",
+    "title": "lpv1 Single Post Slider - Abir",
+    "status": "publish",
+    "meta": {
+        "_elementor_conditions": [
+            "include/singular/lp2",
+            "include/singular/lpv1",
+            "include/singular/lpv2",
+            "include/singular/lpv3"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+<script>
+const slidesInIpv1 = document.querySelectorAll('.slider-con-ipv1 > div');
+let currentIndex = 0;
+
+function changeSlide() {
+    slidesInIpv1.forEach(slide => {
+        slide.style.opacity = '0';
+        slide.style.transition = 'opacity 1s'; 
+    });
+
+    currentIndex = (currentIndex + 1) % slidesInIpv1.length; 
+
+    slidesInIpv1[currentIndex].style.opacity = '1';
+}
+
+slidesInIpv1.forEach(slide => {
+    slide.style.opacity = '0';
+    slide.style.position = 'absolute';
+    slide.style.transition = 'opacity 1s';
+});
+
+slidesInIpv1[currentIndex].style.opacity = '1';
+
+setInterval(changeSlide, 5000);
+</script>

@@ -1,0 +1,603 @@
+<!--CCS-META
+{
+    "slug": "cta-tracking",
+    "title": "CTA Tracking",
+    "status": "publish",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+<script>
+  let isS1Captured = false;
+
+  function getFingerprintId() {
+    try {
+      if (typeof (FINGERPRINT_ID) !== "undefined") {
+        return FINGERPRINT_ID;
+      }
+    } catch (error) { }
+  }
+
+  // Function to check if the user is a bot
+  function isBot(userAgent) {
+    try {
+      userAgent = userAgent || navigator.userAgent;
+      const botUserAgents = [
+        /bot/i, /crawl/i, /slurp/i, /spider/i, /mediapartners/i, /googlebot/i,
+        /adsbot/i, /bingbot/i, /msnbot/i, /baiduspider/i, /duckduckbot/i,
+        /yandexbot/i, /sogou/i, /exabot/i, /facebot/i, /ia_archiver/i,
+        /telegrambot/i, /whatsapp/i, /twitterbot/i, /pinterest/i,
+        /skypeuripsniffer/i, /slackbot/i, /vkshare/i, /discordbot/i
+      ];
+      return botUserAgents.some(botRegex => botRegex.test(userAgent));
+    } catch (error) {
+      return false;
+    }
+  }
+
+  function isValidCTAId(clickID) {
+    let validCTAIds = [
+      "webinar_top_nav",
+      "webinar_hero",
+      "webinar_about-sec",
+      "webinar_curriculum",
+      "header_button_open-modal",
+      "webinar_course-details",
+      "webinar_how-to-enroll-sec",
+      "webinar_sticky-mobile",
+      "hero-section_button_open-modal",
+      "features_button_open-modal",
+      "bottom-webinar_button_open-modal",
+      "footer-bottom-cta_button_open-modal",
+      "webinar_bottom-fold",
+      "curriculum_button_open-modal",
+      "bottom_button_open-modal",
+      "free-guide-section_button_open-modal",
+      "class__direct-link",
+      "hero-section-cta",
+      "sidebar-section-cta",
+      "bottom-cta-mobile",
+      "middle-cta-mobile",
+    ];
+
+    return validCTAIds.includes(clickID) || clickID.includes("open-modal")
+  }
+
+  // Function to save click activity
+  function saveClickActivity(clickID, timestamp, callback = null) {
+    if (isBot()) return;
+		//if(clickID.includes("open-modal")) window.updateZapPayload = {...(window.updateZapPayload || {}), DataClickID: clickID};
+		if (clickID.includes("open-modal") || clickID.includes("cta-") || clickID.includes("open_modal")) {
+			window.updateZapPayload = { ...(window.updateZapPayload || {}), DataClickID: clickID };
+			window.stepProdData = { ...(window.stepProdData || {}), data_click_id : clickID };
+		}
+
+    timestamp = timestamp || Date.now();
+
+    fetch("https://nlhtyrnugl.execute-api.us-west-1.amazonaws.com/prod", {
+      method: "POST",
+      headers: {
+        "x-api-key": "fm0X61U99b80d5SlGjrxFaWjgxIBylhX3LkfYGPN",
+        "Content-Type": "application/json"
+      },
+      keepalive: true,
+      body: JSON.stringify({
+        dataset_id: "Marketing_data_new_logic",
+        table_id: "all_clickstream_data",
+        data: [
+          {
+            page_value_url: window.location.href,
+            student_uuid: visitor_id,
+            timestamp: timestamp,
+            ClickID: clickID,
+            fingerprint_id: getFingerprintId(),
+          }
+        ]
+      })
+    })
+      .then(response => response.json())
+      .then(data => console.log("Success Response:", data))
+      .catch(error => console.error("Error Response:", error))
+      .finally(() => {
+        if (callback) {
+          try {
+            callback();
+          } catch (error) {
+            console.error("Error in callback function:", error);
+          }
+        }
+      });
+  }
+
+  // Add data-click-id attributes to sliders
+  const sliders = [
+    { selector: ".tpc-offer-slider .course__offer-slider-left", id: "tpc-offer_slider_arrow-right" },
+    { selector: ".tpc-offer-slider .course__offer-slider-right", id: "tpc-offer_slider_arrow-left" },
+    { selector: ".tpc-career-slide .course__offer-slider-left", id: "tpc-career_slider_arrow-right" },
+    { selector: ".tpc-career-slide .course__offer-slider-right", id: "tpc-career_slider_arrow-left" },
+    { selector: ".tpc-instructor-slider-right, .tpc-instructor-slider .course__offer-slider-right-v1", id: "tpc-instructor_slider_arrow-left" },
+    { selector: ".tpc-instructor-slider-left, .tpc-instructor-slider .course__offer-slider-left-v1", id: "tpc-instructor_slider_arrow-right" },
+    { selector: ".student-swiper-block-v1 .slider-prev-btn-v3", id: "success-stories_slider_arrow-right" },
+    { selector: ".student-swiper-block-v1 .slider-prev-btn-v4", id: "success-stories_slider_arrow-left" },
+    { selector: ".student-swiper-block .slider-next-btn", id: "success-stories_slider_arrow-right" },
+    { selector: ".student-swiper-block .slider-prev-btn", id: "success-stories_slider_arrow-left" },
+    { selector: ".logo-slider-2 .prev-logo-slide", id: "in-ik-logo_slider_arrow-left" },
+    { selector: ".logo-slider-2 .next-logo-slide", id: "in-ik-logo_slider_arrow-right" },
+    { selector: ".tech-lead-block .left-slide", id: "tech-lead_slider_arrow-left" },
+    { selector: ".tech-lead-block .right-slide", id: "tech-lead_slider_arrow-right" },
+    { selector: ".interview-course-block .left-slide2", id: "alumni-slider_slider_arrow-left" },
+    { selector: ".interview-course-block .right-slide-2", id: "alumni-slider_slider_arrow-right" }
+  ];
+
+  sliders.forEach(item => {
+    document.querySelectorAll(item.selector)?.forEach(element => {
+      element.setAttribute("data-click-id", item.id);
+    });
+  });
+
+  // Function to add data-click-id to elements
+  function addIdToElement(selector, textPrefix, postfix = '_link_redirect-new-page') {
+    document.querySelectorAll(selector)?.forEach(element => {
+      const linkText = element.textContent.trim().toLowerCase();
+      const hyphenatedText = linkText.split(' ').join('-');
+      const linkID = `${textPrefix}${hyphenatedText}${postfix}`;
+      element.setAttribute("data-click-id", linkID);
+    });
+  }
+
+  // Add IDs to specific selectors
+  addIdToElement('.eng-role-link-v2', "course-list_course-");
+  addIdToElement('.indian-footer-links', "footer-");
+  addIdToElement('.new-footer-link', "footer-");
+  addIdToElement('.footer-link-new', "footer-");
+  addIdToElement('.jk-footer-link', "footer-");
+  addIdToElement('.footer-link', "footer-");
+  addIdToElement('.footer-nav-link', "footer-");
+  addIdToElement('.dropdown-link-v1', "course-card_");
+  addIdToElement('.course__sections-menu-link', "course-sec-menu-");
+  addIdToElement('.course__sections-menu-link-2', "course-sec-menu-");
+  addIdToElement('.blog-post-body a, .blog-post-body-2 a', "blog-post-");
+  addIdToElement('.nav-link', 'header-nav-link-');
+  addIdToElement('.link_privacy_policy', 'webinar-modal-popup-');
+  addIdToElement('.w-tab-link', 'tabs-', '_in-page');
+  addIdToElement('.brand', 'logo_', '_clicked_redirect');
+
+
+
+
+
+
+
+
+
+
+// ========================================
+  // TOP NAVIGATION MENU TRACKING
+  // ========================================
+  
+  // Function to add click IDs to top navigation menu items
+  function addTopNavMenuClickIds() {
+    try {
+
+      // Define the menu item IDs to track
+      const menuItemIds = ['44468', '44469', '44470', '44471', '44472'];
+      
+      menuItemIds.forEach(itemId => {
+        // Find menu items by class (e.g., menu-item-44468)
+        const menuItems = document.querySelectorAll(`.menu-item-${itemId}`);
+        
+        menuItems.forEach(menuItem => {
+          // Get the link text from the menu item
+          const linkElement = menuItem.querySelector('a');
+          
+          if (linkElement) {
+            const linkText = linkElement.textContent.trim()
+              .toLowerCase()
+              .replace(/\s+/g, '-')
+              .replace(/[^a-z0-9-]/g, '');
+            
+            const clickId = `top_nav_${linkText}`;
+            
+            // Add to both the menu item and the link
+            menuItem.setAttribute('data-click-id', clickId);
+            linkElement.setAttribute('data-click-id', clickId);
+            
+          }
+        });
+      });
+
+
+    } catch (error) {
+      console.error("? Error adding top nav menu click IDs:", error);
+    }
+  }
+
+  // Execute top nav tracking when DOM is ready
+  (function() {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', addTopNavMenuClickIds);
+    } else {
+      addTopNavMenuClickIds();
+    }
+  })();
+
+
+
+
+
+
+
+// ========================================
+  // FAQ TRACKING - Add click IDs to FAQ tabs and questions
+  // ========================================
+  
+  // Function to add click IDs to FAQ tabs and questions
+  function addFAQClickIds() {
+    try {
+
+      // Tab name mapping for the three specific tab IDs
+      const tabMapping = {
+        'e-n-tab-title-2184550101': 'program-structure-and-value',
+        'e-n-tab-title-2184550102': 'enrollment-and-prerequisites',
+        'e-n-tab-title-2184550103': 'learning-outcomes'
+      };
+
+      // 1. Add click IDs to FAQ Tab Buttons using specific IDs
+      Object.keys(tabMapping).forEach(tabId => {
+        const tabButton = document.getElementById(tabId);
+        
+        if (tabButton && !tabButton.hasAttribute('data-faq-processed')) {
+          const tabName = tabMapping[tabId];
+          const clickId = `faq-tab_${tabName}`;
+          
+          tabButton.setAttribute('data-click-id', clickId);
+          tabButton.setAttribute('data-faq-processed', 'true');
+          
+          // Add click event to track immediately
+          tabButton.addEventListener('click', function(e) {
+            saveClickActivity(clickId, Date.now());
+          }, true);
+          
+        }
+      });
+
+      // 2. Add click IDs to Individual FAQ Questions based on aria-controls
+      // Define all the aria-controls IDs we want to track
+      const ariaControlsIds = [
+        // Tab 1: Program Structure & Value
+        'e-n-accordion-item-3900',  'e-n-accordion-item-3901', 'e-n-accordion-item-3902', 
+        'e-n-accordion-item-3903', 'e-n-accordion-item-3904',
+        // Tab 2: Enrollment & Prerequisites
+        'e-n-accordion-item-1690', 'e-n-accordion-item-1691',
+        'e-n-accordion-item-1692', 'e-n-accordion-item-1693', 
+        'e-n-accordion-item-1694',
+        // Tab 3: Learning Outcomes
+        'e-n-accordion-item-4930', 'e-n-accordion-item-4931', 
+        'e-n-accordion-item-4932'
+      ];
+
+      ariaControlsIds.forEach(ariaControlId => {
+        // Find the button/summary that controls this accordion item
+        const summary = document.querySelector(`[aria-controls="${ariaControlId}"]`);
+        
+        if (!summary || summary.hasAttribute('data-faq-processed')) return;
+        
+        // Find which tab this accordion belongs to
+        const parentTab = summary.closest('[role="tabpanel"]');
+        let tabName = 'unknown';
+        
+        if (parentTab) {
+          const tabId = parentTab.getAttribute('aria-labelledby');
+          if (tabId && tabMapping[tabId]) {
+            tabName = tabMapping[tabId];
+          }
+        }
+        
+        // Get the question text from the summary element
+        const questionTextElement = summary.querySelector('.e-n-accordion-item-title-text');
+        let questionText = 'unknown-question';
+        
+        if (questionTextElement) {
+          questionText = questionTextElement.textContent.trim()
+            .toLowerCase()
+            .replace(/\s+/g, '_')           // Replace spaces with underscores
+            .replace(/[?!.,'"]/g, '')       // Remove punctuation
+            .replace(/[^a-z0-9_]/g, '')     // Remove special characters
+            .substring(0, 60);              // Limit to 60 characters
+        }
+        
+        // Use click event to track and send to API immediately
+        summary.addEventListener('click', function(e) {
+          const isCurrentlyExpanded = this.getAttribute('aria-expanded') === 'true';
+          const action = isCurrentlyExpanded ? 'close' : 'open';
+          const clickId = `faq-question_${action}_${tabName}_${questionText}`;
+          
+          this.setAttribute('data-click-id', clickId);
+          
+          // Send to API immediately
+          saveClickActivity(clickId, Date.now());
+        }, true); // Capture phase - runs before Elementor
+        
+        // Set initial click ID based on current state
+        const initialState = summary.getAttribute('aria-expanded') === 'true' ? 'close' : 'open';
+        const initialClickId = `faq-question_${initialState}_${tabName}_${questionText}`;
+        summary.setAttribute('data-click-id', initialClickId);
+        summary.setAttribute('data-faq-processed', 'true');
+      });
+
+    } catch (error) {
+      console.error("? Error adding FAQ click IDs:", error);
+    }
+  }
+
+  // Execute FAQ tracking with multiple attempts for Elementor
+  (function() {
+    function initFAQ() {
+      addFAQClickIds();
+      // Retry after delays to catch dynamically loaded FAQs
+      setTimeout(addFAQClickIds, 500);
+      setTimeout(addFAQClickIds, 1500);
+      setTimeout(addFAQClickIds, 3000);
+    }
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initFAQ);
+    } else {
+      initFAQ();
+    }
+    
+    // Also try when Elementor is ready
+    if (typeof jQuery !== 'undefined') {
+      jQuery(window).on('elementor/frontend/init', function() {
+        setTimeout(addFAQClickIds, 1000);
+      });
+    }
+  })();
+
+  // ========================================
+  // END FAQ TRACKING
+  // ========================================
+
+
+
+
+
+
+
+
+
+
+
+  // Event listener for clicks
+  let tempCtaF;
+  document.addEventListener("click", event => {
+    const target = event.target;
+
+    if (tempCtaF) clearTimeout(tempCtaF);
+    tempCtaF = setTimeout(function () {
+      mlCtaCheck(target);
+    }, 500);
+
+  });
+
+  document.querySelectorAll('[href*="webinar_form"]').forEach(element => {
+    isS1Captured = false
+    element.addEventListener('click', (event) => {
+      const timestamp = Date.now();
+      const target = event.target;
+      const clickID = mlCtaCheck(target, false) || "";
+      if (!isValidCTAId(clickID)) {
+        captureS1Fallback(timestamp);
+      }
+    });
+  });
+
+  function captureS1Fallback(timestamp = Date.now()) {
+    isS1Captured = true;
+    saveClickActivity("open_modal_fallback", timestamp);
+  }
+
+  function fallbackClickID(element) {
+    try {
+      let clickID = null;
+      const hrefAttr = element.getAttribute('href');
+      const classAttr = element.getAttribute('class');
+      const textContent = element.textContent.trim();
+      const targetAttr = element.getAttribute('target-tab');
+
+      // Helper function to process href link
+      function processHref(href) {
+        if (href === '#') {
+          return null;
+        }
+        if (href.startsWith('#')) {
+          return `internal__${href.substring(1).replace(/\s+/g, '_')}`;
+        }
+        const url = new URL(href, window.location.origin); // Create URL relative to the current origin
+        let hostname = url.hostname.replace(/^www\./, '');
+        let pathname = url.pathname.split('/').filter(Boolean);
+
+        if (pathname.length > 2) {
+          pathname = pathname.slice(-3).join('_');
+        } else {
+          pathname = pathname.join('_');
+        }
+
+        return `${hostname.substring(0, 25)}_${pathname}`;
+      }
+
+      if (targetAttr) {
+        clickID = `section__${targetAttr.split(" ")[0].replace(/\s+/g, '_')}`;
+      }
+
+      // Use href link if available and not "#"
+      if (hrefAttr) {
+        clickID = processHref(hrefAttr);
+        if (clickID) {
+          clickID = `href__${clickID.replace(/\s+/g, '_').substring(0, 50)}`;
+        }
+      }
+
+      // Use class attribute if href is not available or is "#"
+      if (!clickID && classAttr) {
+        clickID = `class__${classAttr.split(" ")[0].replace(/\s+/g, '_')}`;
+      }
+
+      // Use text content if neither href nor class is available
+      if (!clickID && textContent) {
+        clickID = `text__${textContent.toLowerCase().replace(/\s+/g, '_').substring(0, 50)}`;
+      }
+
+      return clickID;
+    } catch (error) {
+      console.error(error);
+      return null;
+    }
+  }
+
+  function mlCtaCheck(target, callAPI = true) {
+
+    if (target?.type === "submit") {
+      return;
+    }
+
+    // Handle text nodes - get the parent element if target is not an Element
+    if (target && target.nodeType !== 1) {
+      target = target.parentElement;
+    }
+
+    if (!target) {
+      return;
+    }
+
+    let clickID = target.getAttribute("data-click-id") || (/\d/.test(target.id) ? false : target.id);
+
+    if (!clickID) {
+      if (target.tagName != "A") {
+        target = target.closest("a");
+      }
+
+      if (target && (target.tagName === "A" || (target.tagName === "INPUT" && target.type === "submit"))) {
+        clickID = fallbackClickID(target);
+      }
+      if (!clickID) {
+        return;
+      }
+    }
+
+    const timestamp = Date.now();
+    if (callAPI) {
+      if (isValidCTAId(clickID)) {
+        isS1Captured = true;
+      }
+      saveClickActivity(clickID, timestamp);
+    } else {
+      return clickID;
+    }
+  }
+
+  // Handle CTA Traking code for wordpress
+  function addCtaId(element, value) {
+    if (!element.getAttribute("data-click-id")) {
+      element.setAttribute("data-click-id", value);
+    }
+  }
+
+  document.querySelectorAll("[data-cta-id], [data-click-id]")?.forEach(function (item) {
+    const ctaId = item.getAttribute("data-click-id") || item.id || item.getAttribute("data-cta-id");
+    addIdChild(item, ctaId)
+  })
+
+  function addIdChild(item, ctaId) {
+    addCtaId(item, ctaId);
+    const getChild = item.children;
+    for (let eachChild of getChild) {
+      addIdChild(eachChild, ctaId);
+    }
+    return;
+  }
+
+  function isPopUpForm() {
+    try {
+      const fragments = ['#webinar_form', '#data_webinar_form'];
+      const selector = fragments.map(fragment => `[href*="${fragment}"]`).join(',');
+      const elements = document.querySelectorAll(selector);
+      return elements.length > 1;
+    } catch (error) {
+      console.error("Error in isPopUpForm:", error);
+      return false;
+    }
+  }
+
+  function saveFormEventsActivity(step, ctaid = "", callback = null, errorMessage) {
+    try {
+      let clickid = ""
+      if (!step && !ctaid) {
+        console.warn("Step is required to track form events");
+        return;
+      }
+
+      if (step.includes("info") && !isS1Captured && isPopUpForm()) {
+        captureS1Fallback();
+      }
+
+      switch (step) {
+        case "info": {
+          clickid = "webinar-modal_button_show-webinar-slots";
+          break
+        }
+        case "info-e": {
+          clickid = `error-info-${errorMessage}`;
+          break
+        }
+        case "slot": {
+          clickid = "Webinar-modal_button_open-gql";
+          break
+        }
+        case "slot-e": {
+          clickid = `error-slot-${errorMessage}`;
+          break
+        }
+        case "gql": {
+          clickid = "Gql-form_button_gpl-registration-step";
+          break
+        }
+        case "gql-e": {
+          clickid = `error-gql-${errorMessage}`;
+          break
+        }
+        case "domain": {
+          clickid = "Gql-form_button_gql-domain-switch-step";
+          break
+        }
+        case "domain-e": {
+          clickid = `error-domain-${errorMessage}`;
+          break
+        }
+        case "source": {
+          clickid = "Gql-form_button_gql-final-step";
+          break
+        }
+        case "source-e": {
+          clickid = `error-source-${errorMessage}`;
+          break
+        }
+        default: {
+          clickid = ctaid;
+          break
+        }
+      }
+
+      saveClickActivity(clickid, Date.now(), callback);
+    } catch (error) {
+      console.error("Error in saveFormEventsActivity:", error);
+    }
+
+  }
+</script>

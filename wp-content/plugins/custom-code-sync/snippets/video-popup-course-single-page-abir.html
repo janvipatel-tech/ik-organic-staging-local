@@ -1,0 +1,91 @@
+<!--CCS-META
+{
+    "slug": "video-popup-course-single-page-abir",
+    "title": "Video Popup Course Single page-Abir",
+    "status": "publish",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+
+<script> 
+/*
+const v_popup_buttons = document.querySelectorAll('.video_popup_btn');
+const v_popups = document.querySelectorAll('.video_popup');
+
+// 	autoplay	
+const videoSingleCourse = document.querySelector('#player')
+const videoPopupbutton = document.querySelector('.video_popup_btn')
+
+function openPopup(popup) {
+    popup.classList.add('open');
+    document.body.style.overflow = 'hidden';
+}
+
+function closePopup(popup) {
+    popup.classList.remove('open');
+    document.body.style.overflow = '';
+    videoSingleCourse.src = videoSingleCourse.src.split('?')[0] + '?start=0&autoplay=0';
+}
+
+v_popup_buttons.forEach((button, index) => {
+    button.addEventListener('click', function (event) {
+        event.stopPropagation();
+        openPopup(v_popups[index]);
+    });
+});
+
+v_popups.forEach((popup) => {
+    popup.addEventListener('click', function (event) {
+        closePopup(popup);
+    });
+});
+
+const popupContents = document.querySelectorAll('.popup_content');
+popupContents.forEach((content) => {
+    content.addEventListener('click', function (event) {
+        event.stopPropagation();
+    });
+});
+
+
+	
+// 	autoplay	
+
+videoPopupbutton.addEventListener('click', () => {
+    videoSingleCourse.src = videoSingleCourse.src.split('?')[0] + '?start=0&autoplay=1';
+
+})
+*/
+</script>
+
+
+<script>
+    const getVideoPoup = document.querySelector(".video_popup");
+    if(getVideoPoup){
+        const videoSingleCourse = getVideoPoup.querySelector("iframe");
+        const videoPopupbutton = document.querySelector('.video_popup_btn');
+        const player = new Vimeo.Player(videoSingleCourse);
+        player.pause();
+
+        videoPopupbutton.addEventListener("click", function(){
+            getVideoPoup.classList.add('open');
+            document.body.style.overflow = 'hidden';
+            player.play();
+        })
+
+        getVideoPoup.addEventListener("click", function(e){
+            if(e.target.tagName != "IFRAME"){
+                getVideoPoup.classList.remove('open');
+                document.body.style.overflow = '';
+                player.pause();
+            }
+        })
+    }
+</script>

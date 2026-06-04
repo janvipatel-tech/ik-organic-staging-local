@@ -1,0 +1,106 @@
+<!--CCS-META
+{
+    "slug": "elementor-custom-code-45267",
+    "title": "sentry",
+    "status": "publish",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_head",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+<!-- sentry -->
+<script src="https://js.sentry-cdn.com/6c08f35e971a4ca19dc1650cd1d1ff7f.min.js" crossorigin="anonymous"></script>
+<script src="https://browser.sentry-cdn.com/10.26.0/captureconsole.min.js"
+  integrity="sha384-sWqHK3BkVxkrsoV5x+Dz+0/FKDdbqtVzG6M/D40WRwqUQwqcOUUuaeQXWd3f8BnD" crossorigin="anonymous"></script>
+<script>
+  const isStaging = window.location.href.toLowerCase().includes('wpcomstaging');
+  const environment = isStaging ? 'staging' : 'production';
+  
+  // Determine site domain for differentiation
+  const hostname = window.location.hostname;
+  
+  // Domain mapping for site identification (order matters - most specific first)
+  const domainMappings = [
+    { pattern: 'learn.interviewkickstart.com', site: 'learn' },
+    { pattern: 'learninterviewkickstartcom.wpcomstaging.com', site: 'learn' },
+
+    { pattern: 'ininterviewkickstart.wpcomstaging.com', site: 'india' },
+    { pattern: 'in.interviewkickstart.com', site: 'india' },
+
+    { pattern: 'interviewkickstart.wpcomstaging.com', site: 'organic' },
+    { pattern: 'www.interviewkickstart.com', site: 'organic' },
+    { pattern: 'interviewkickstart.com', site: 'organic' },
+  ];
+  
+  const siteDomain = domainMappings.find(mapping => hostname.includes(mapping.pattern))?.site || 'unknown';
+
+  Sentry.init({
+    dsn: "https://6c08f35e971a4ca19dc1650cd1d1ff7f@o429184.ingest.us.sentry.io/4504994110767104",
+    environment: environment,
+    initialScope: {
+      tags: {
+        site: siteDomain,
+        domain: hostname
+      }
+    },
+    tracesSampleRate: isStaging ? 1.0 : 0.5,
+    debug: false,
+    sendDefaultPii: isStaging,
+    // Note: Currently exprimenting this on learn only.
+    allowUrls: [
+      // Only capture errors from Interview Kickstart domains
+      /https?:\/\/(www\.)?interviewkickstart\.com/,
+      /https?:\/\/learn\.interviewkickstart\.com/,
+      /https?:\/\/in\.interviewkickstart\.com/,
+      // Staging domains
+      /https?:\/\/.*\.wpcomstaging\.com/,
+    ],
+    ignoreErrors: [
+      // Exact matches for known error messages
+      "failed to send metrics",
+      "Event `ErrorEvent` captured as exception with message `Script error.`",
+
+      // Third-party service errors (unactionable)
+      "TypeError: Failed to fetch (get.geojs.io)",
+      "n: HTTP error: TypeError: Failed to fetch",
+      "TypeError: Failed to fetch (psb.taboola.com)",
+      "TypeError: undefined is not an object (evaluating 'OptiMonkRegistry.features.TRACK_JS')",
+      "Sentry.captureConsoleIntegration is not a function",
+      "Multiple Sentry Session Replay instances are not supported",
+      "Failed to fetch",
+
+      // Regex patterns for flexible matching
+      /Script error\.?/i,
+      /Request failed with status 0/i,
+      /Load failed/i,
+      /bugsnag/i,
+      /figpii\.com/i,
+      /Event `ErrorEvent` captured as exception/i,
+      /^Failed to fetch$/, // Network-related errors, unactionable (chrome)
+      /get\.geojs\.io/i, // GeoJS geolocation service
+      /psb\.taboola\.com/i, // Taboola advertising service
+      /OptiMonkRegistry/i, // OptiMonk tracking service
+      /jfclientsdk/i, // JetFabric SDK errors
+    ],
+
+    integrations: [
+      Sentry.captureConsoleIntegration({
+        levels: ['error']
+      })
+    ]
+  });
+
+  console.log(`Sentry initialized for ${environment} on ${siteDomain} (${hostname})`);
+
+  // Dispatch custom event when Sentry is initialized
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('sentryInitialized', {
+      detail: { environment: environment }
+    }));
+  }
+</script>

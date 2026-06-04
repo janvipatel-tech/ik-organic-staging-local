@@ -1,0 +1,117 @@
+<!--CCS-META
+{
+    "slug": "ip-event-head",
+    "title": "IP event head",
+    "status": "publish",
+    "meta": {
+        "_elementor_location": "elementor_head",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": [],
+        "_elementor_conditions": [
+            "include/singular/page/46166",
+            "include/singular/page/46624"
+        ]
+    }
+}
+CCS-META-->
+<!-- IP event head -->
+<script>
+let isUpcommingError = false;
+
+    const originalFetch = window.fetch;
+
+    window.fetch = async function(resource, options) {
+        let isUpcommingSlot = resource.includes("upcoming-slots");
+
+        if(!isUpcommingSlot) return originalFetch(resource, options);
+
+          try { 
+                const response = await originalFetch(resource, options);
+
+                if (response.ok) return response;
+                isUpcommingError = currentFallBack();
+                return response;
+            } catch (error) {
+                console.error("Error in fetch for upcoming-slots", error);
+                isUpcommingError = currentFallBack();
+                throw error; // keep native behavior
+            }
+    };
+
+    function currentFallBack(){
+        let slots;
+        if(v_country === "India"){
+            slots = [
+														{
+																"start_time": "2025-12-13T06:00:00+05:30",
+																"end_time": "2025-12-13T09:00:00+05:30",
+																"utc_start_time": "2025-12-13T00:30:00+00:00",
+																"utc_end_time": "2025-12-13T03:30:00+00:00",
+																"day": "13",
+																"month": "12",
+																"year": "2025",
+																"hour": "06",
+																"minute": "00",
+																"second": "00",
+																"am_or_pm": "AM",
+																"weekday": "Saturday",
+																"invitee_start_time": "06:00AM - Saturday, December 13, 2025",
+																"invitee_end_time": "09:00AM - Saturday, December 13, 2025"
+														},
+														{
+																"start_time": "2025-12-14T06:00:00+05:30",
+																"end_time": "2025-12-14T09:00:00+05:30",
+																"utc_start_time": "2025-12-14T00:30:00+00:00",
+																"utc_end_time": "2025-12-14T03:30:00+00:00",
+																"day": "14",
+																"month": "12",
+																"year": "2025",
+																"hour": "06",
+																"minute": "00",
+																"second": "00",
+																"am_or_pm": "AM",
+																"weekday": "Sunday",
+																"invitee_start_time": "06:00AM - Sunday, December 14, 2025",
+																"invitee_end_time": "09:00AM - Sunday, December 14, 2025"
+														}
+												];
+        }else{
+            slots = [
+														{
+																"start_time": "2025-12-13T01:30:00+01:00",
+																"end_time": "2025-12-13T04:30:00+01:00",
+																"utc_start_time": "2025-12-13T00:30:00+00:00",
+																"utc_end_time": "2025-12-13T03:30:00+00:00",
+																"day": "13",
+																"month": "12",
+																"year": "2025",
+																"hour": "01",
+																"minute": "30",
+																"second": "00",
+																"am_or_pm": "AM",
+																"weekday": "Saturday",
+																"invitee_start_time": "01:30AM - Saturday, December 13, 2025",
+																"invitee_end_time": "04:30AM - Saturday, December 13, 2025"
+														},
+														{
+																"start_time": "2025-12-14T01:30:00+01:00",
+																"end_time": "2025-12-14T04:30:00+01:00",
+																"utc_start_time": "2025-12-14T00:30:00+00:00",
+																"utc_end_time": "2025-12-14T03:30:00+00:00",
+																"day": "14",
+																"month": "12",
+																"year": "2025",
+																"hour": "01",
+																"minute": "30",
+																"second": "00",
+																"am_or_pm": "AM",
+																"weekday": "Sunday",
+																"invitee_start_time": "01:30AM - Sunday, December 14, 2025",
+																"invitee_end_time": "04:30AM - Sunday, December 14, 2025"
+														}
+                        ];
+        }
+        return slots;
+    }
+
+</script>

@@ -1,0 +1,325 @@
+<!--CCS-META
+{
+    "slug": "experiments-sdk",
+    "title": "experiments-sdk",
+    "status": "publish",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_head",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+<!-- experiments-sdk -->
+<script nitro-exclude>
+  (function (window) {
+    'use strict';
+
+    const COOKIE_NAME = 'ab_assignments';
+    let assignmentsCache = null;
+    let urlParamsCache = null;
+
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) {
+        return parts.pop().split(';').shift();
+      }
+      return null;
+    }
+
+    function setCookie(name, value, days) {
+      const date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      const expires = `expires=${date.toUTCString()}`;
+      document.cookie = `${name}=${value};${expires};path=/`;
+    }
+
+    function getAssignments() {
+      if (assignmentsCache !== null) {
+        return assignmentsCache;
+      }
+
+      try {
+        const cookieValue = getCookie(COOKIE_NAME);
+        if (!cookieValue) {
+          assignmentsCache = {};
+          return assignmentsCache;
+        }
+        assignmentsCache = JSON.parse(decodeURIComponent(cookieValue));
+        return assignmentsCache;
+      } catch (e) {
+        if (isDebugMode()) {
+          console.warn('[AB Testing] Failed to parse assignments cookie:', e);
+        }
+        assignmentsCache = {};
+        return assignmentsCache;
+      }
+    }
+
+    function saveAssignments(assignments, persistenceDays) {
+      try {
+        const cookieValue = encodeURIComponent(JSON.stringify(assignments));
+        setCookie(COOKIE_NAME, cookieValue, persistenceDays || 30);
+        assignmentsCache = assignments;
+      } catch (e) {
+        if (isDebugMode()) {
+          console.warn('[AB Testing] Failed to save assignments cookie:', e);
+        }
+      }
+    }
+
+    function generateRandomRoll(experimentKey) {
+      const assignments = getAssignments();
+
+      if (assignments[experimentKey] !== undefined) {
+        return assignments[experimentKey];
+      }
+
+      const roll = Math.floor(Math.random() * 100);
+      assignments[experimentKey] = roll;
+
+      const experiment = getExperiment(experimentKey);
+      const persistenceDays = experiment && experiment.persistence_days ? experiment.persistence_days : 30;
+
+      saveAssignments(assignments, persistenceDays);
+
+      return roll;
+    }
+
+    function getExperiment(experimentKey) {
+      try {
+        if (!window.ABConfig) {
+          return null;
+        }
+
+        if (window.ABConfig.experiments && window.ABConfig.experiments[experimentKey]) {
+          return window.ABConfig.experiments[experimentKey];
+        }
+
+        if (window.ABConfig[experimentKey]) {
+          return window.ABConfig[experimentKey];
+        }
+
+        return null;
+      } catch (e) {
+        if (isDebugMode()) {
+          console.warn('[AB Testing] Error accessing ABConfig:', e);
+        }
+        return null;
+      }
+    }
+
+    function matchesTargetPage(experiment) {
+      if (!experiment || !experiment.target_pages) {
+        return false;
+      }
+
+      const currentPath = window.location.pathname;
+      const targetPages = Array.isArray(experiment.target_pages)
+        ? experiment.target_pages
+        : [experiment.target_pages];
+
+      for (const target of targetPages) {
+        if (target === '*') {
+          return true;
+        }
+
+        if (target === currentPath) {
+          return true;
+        }
+
+        if (target.startsWith('./')) {
+          // Prefix match: "./product" matches "/product", "/product/123", etc.
+          const prefix = target.substring(2);
+          if (currentPath.startsWith('/' + prefix)) {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    }
+
+    function isWithinTimeWindow(experiment) {
+      if (!experiment) {
+        return false;
+      }
+
+      const now = new Date();
+
+      if (experiment.start_date) {
+        const startDate = new Date(experiment.start_date);
+        if (now < startDate) {
+          return false;
+        }
+      }
+
+      if (experiment.end_date) {
+        const endDate = new Date(experiment.end_date);
+        if (now > endDate) {
+          return false;
+        }
+      }
+
+      return true;
+    }
+
+    function isExperimentActive(experiment) {
+      if (!experiment) {
+        return false;
+      }
+
+      if (experiment.status && experiment.status !== 'active') {
+        return false;
+      }
+
+      if (!isWithinTimeWindow(experiment)) {
+        return false;
+      }
+
+      if (!matchesTargetPage(experiment)) {
+        return false;
+      }
+
+      return true;
+    }
+
+    function getVariantForRoll(experiment, roll) {
+      if (!experiment || !experiment.variants) {
+        return null;
+      }
+
+      let variants = [];
+
+      if (Array.isArray(experiment.variants)) {
+        variants = experiment.variants;
+      } else if (typeof experiment.variants === 'object') {
+        // Convert object format { "control": { weight: 50 }, "variant1": { weight: 50 } }
+        variants = Object.keys(experiment.variants).map(name => ({
+          name: name,
+          weight: experiment.variants[name].weight || 0
+        }));
+      }
+
+      if (variants.length === 0) {
+        return null;
+      }
+
+      let cumulativeWeight = 0;
+      for (const variant of variants) {
+        cumulativeWeight += variant.weight || 0;
+        if (roll < cumulativeWeight) {
+          return variant.name;
+        }
+      }
+
+      return variants[variants.length - 1].name;
+    }
+
+    function getUrlParam(name) {
+      if (urlParamsCache === null) {
+        urlParamsCache = new URLSearchParams(window.location.search);
+      }
+      return urlParamsCache.get(name);
+    }
+
+    let debugModeCache = null;
+    function isDebugMode() {
+      if (debugModeCache === null) {
+        const debugParam = getUrlParam('ab_debug');
+        debugModeCache = debugParam === '1' || debugParam === 'true';
+      }
+      return debugModeCache;
+    }
+
+    // Format: ?ab_override=experimentKey:variantName
+    function getOverride(experimentKey) {
+      const override = getUrlParam('ab_override');
+      if (!override) {
+        return null;
+      }
+
+      const parts = override.split(':');
+      if (parts.length !== 2) {
+        return null;
+      }
+
+      const [key, variant] = parts;
+      if (key === experimentKey) {
+        return variant;
+      }
+
+      return null;
+    }
+
+    function checkExperimentFlag(experimentKey, variantName) {
+      try {
+        const override = getOverride(experimentKey);
+        if (override !== null) {
+          const matches = override === variantName;
+          if (isDebugMode()) {
+            console.log(`[AB Testing] Override active for ${experimentKey}: ${override}, checking ${variantName} = ${matches}`);
+          }
+          return matches;
+        }
+
+        const experiment = getExperiment(experimentKey);
+        if (!experiment) {
+          if (isDebugMode()) {
+            console.log(`[AB Testing] Experiment "${experimentKey}" not found in ABConfig`);
+          }
+          return false;
+        }
+
+        if (!isExperimentActive(experiment)) {
+          if (isDebugMode()) {
+            console.log(`[AB Testing] Experiment "${experimentKey}" is not active`);
+          }
+          return false;
+        }
+
+        const roll = generateRandomRoll(experimentKey);
+        const assignedVariant = getVariantForRoll(experiment, roll);
+
+        if (!assignedVariant) {
+          if (isDebugMode()) {
+            console.warn(`[AB Testing] Could not determine variant for experiment "${experimentKey}"`);
+          }
+          return false;
+        }
+
+        const matches = assignedVariant === variantName;
+
+        if (isDebugMode()) {
+          console.log(`[AB Testing] Experiment: ${experimentKey}, Roll: ${roll}, Assigned: ${assignedVariant}, Checking: ${variantName}, Result: ${matches}`);
+        }
+
+        return matches;
+
+      } catch (e) {
+        if (isDebugMode()) {
+          console.error('[AB Testing] Error in checkExperimentFlag:', e);
+        }
+        return false;
+      }
+    }
+
+    window.checkExperimentFlag = checkExperimentFlag;
+
+    if (isDebugMode()) {
+      window.__ABTestingDebug = {
+        getAssignments: getAssignments,
+        getExperiment: getExperiment,
+        isExperimentActive: isExperimentActive,
+        matchesTargetPage: matchesTargetPage,
+        isWithinTimeWindow: isWithinTimeWindow
+      };
+      console.log('[AB Testing] Debug mode enabled. Use window.__ABTestingDebug for debugging.');
+    }
+
+  })(window);
+</script>

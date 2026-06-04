@@ -1,0 +1,49 @@
+<!--CCS-META
+{
+    "slug": "footer-hide-on-click",
+    "title": "Footer hide on click",
+    "status": "publish",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const footerHideIcon = document.getElementById('footer_hide_icon');
+    const footerHideIconContainer = document.getElementById('footer_hide_container');
+
+    if (!footerHideIcon || !footerHideIconContainer) return;
+
+    footerHideIcon.addEventListener('click', () => {
+        footerHideIconContainer.classList.toggle('max_height_0');
+        footerHideIcon.classList.toggle('icon_rotate');
+        footerHideIconContainer.classList.toggle('lock');
+    });
+
+    window.addEventListener('scroll', () => {
+        if (!(footerHideIconContainer.classList.contains('lock'))) {
+            let distanceFromBottom =
+                document.documentElement.scrollHeight - window.scrollY - window.innerHeight;
+
+            if (window.scrollY < 1000 || distanceFromBottom < 600) {
+                if (!footerHideIconContainer.classList.contains("max_height_0")) {
+                    footerHideIconContainer.classList.add('max_height_0');
+                    footerHideIcon.classList.toggle('icon_rotate');
+                }
+            } else {
+                if (footerHideIconContainer.classList.contains("max_height_0")) {
+                    footerHideIconContainer.classList.remove('max_height_0');
+                    footerHideIcon.classList.toggle('icon_rotate');
+                }
+            }
+        }
+    });
+});
+
+</script>

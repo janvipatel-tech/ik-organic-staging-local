@@ -1,0 +1,37 @@
+<!--CCS-META
+{
+    "slug": "get-free-pdf-form-open-and-close",
+    "title": "Get Free PDF Form open and Close",
+    "status": "publish",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+<script>
+window.addEventListener('click', function (e) {
+    // Handle Show Button Click (PDF COPY FORM)
+    const showBtn = e.target.closest('[href="#blog_data_webinar_form"]');
+    if (showBtn) {
+        e.preventDefault();
+        const form = document.querySelector('.blog_data_en_wb');
+        if (form) {
+            form.setAttribute('show_status', true);
+        }
+    }
+
+    // Handle Close Button Click (PDF COPY FORM)
+    const closeBtn = e.target.closest('.blog_data_web_near_close');
+    if (closeBtn) {
+        const form = document.querySelector('.blog_data_en_wb');
+        if (form) {
+            form.setAttribute('show_status', false);
+        }
+    }
+});
+</script>

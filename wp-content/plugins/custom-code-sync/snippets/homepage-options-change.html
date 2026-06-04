@@ -1,0 +1,109 @@
+<!--CCS-META
+{
+    "slug": "homepage-options-change",
+    "title": "HomePage Options Change",
+    "status": "draft",
+    "meta": {
+        "_elementor_conditions": [
+            "include/singular/front_page"
+        ],
+        "_elementor_location": "elementor_head",
+        "_elementor_priority": "10",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    console.log("Topic selection script loaded");
+
+    const API_BASE_URL =
+        "https://uplevel.interviewkickstart.com/api/webinar-slot";
+
+    const container = document.querySelector(".topic_select");
+    const radios = container.querySelectorAll("input[type='radio']");
+
+    const optionMap = {
+        IP: container.querySelector("#topic_select_option_interview_prep").closest("label"),
+        SU: container.querySelector("#topic_select_option_switch_up").closest("label"),
+        AGENTIC: container.querySelector("#topic_select_option_agentic_ai").closest("label")
+    };
+
+    let lastWebinarType = null;
+
+    /* -----------------------------
+       API CALL FUNCTION
+    ------------------------------ */
+    function callUpcomingSlotsAPI(webinarType) {
+        if (!v_country || !v_timezone) {
+            console.warn("[API] Missing country or timezone", {
+                v_country,
+                v_timezone
+            });
+            return;
+        }
+
+        if (webinarType === lastWebinarType) {
+            console.log("[API] Skipping duplicate call for:", webinarType);
+            return;
+        }
+
+        lastWebinarType = webinarType;
+
+        const url =
+            `${API_BASE_URL}/upcoming-slots/?` +
+            `country=${encodeURIComponent(v_country)}` +
+            `&program=Backend` +
+            `&timezone=${encodeURIComponent(v_timezone)}` +
+            `&type=${encodeURIComponent(webinarType)}`;
+
+        console.log("[API] Calling upcoming slots");
+        console.log("[API] URL:", url);
+
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                console.log("[API] Response received:", data);
+            })
+            .catch(err => {
+                console.error("[API] Error:", err);
+            });
+    }
+
+    /* -----------------------------
+       RANDOM DEFAULT SELECTION
+    ------------------------------ */
+    const rand = Math.random() * 100;
+
+    let selectedKey;
+    if (rand < 40) selectedKey = "IP";
+    else if (rand < 80) selectedKey = "SU";
+    else selectedKey = "AGENTIC";
+
+    radios.forEach(r => r.checked = false);
+
+    const selectedLabel = optionMap[selectedKey];
+    const selectedInput = selectedLabel.querySelector("input");
+
+    selectedInput.checked = true;
+    container.prepend(selectedLabel);
+
+    // ? Fire API for default selection
+    callUpcomingSlotsAPI(
+        selectedInput.getAttribute("webinartype")
+    );
+
+    /* -----------------------------
+       USER CHANGE HANDLER
+    ------------------------------ */
+    radios.forEach(radio => {
+        radio.addEventListener("change", function () {
+            if (!this.checked) return;
+
+            callUpcomingSlotsAPI(
+                this.getAttribute("webinartype")
+            );
+        });
+    });
+});
+</script>

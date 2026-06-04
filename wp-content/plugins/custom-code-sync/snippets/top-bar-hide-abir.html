@@ -1,0 +1,26 @@
+<!--CCS-META
+{
+    "slug": "top-bar-hide-abir",
+    "title": "Top Bar Hide - Abir",
+    "status": "publish",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+<!-- Top Bar Hide - Abir -->
+<script>
+  const closeButton = document.querySelector('.top_bar_cls_btn');
+  const topBar = document.querySelector('.top_bar_show_hide');
+
+  if (closeButton && topBar) {
+    closeButton.addEventListener('click', function () {
+      topBar.style.display = 'none';
+    });
+  }
+</script>

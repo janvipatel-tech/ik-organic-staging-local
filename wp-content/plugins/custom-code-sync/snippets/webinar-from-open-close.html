@@ -1,0 +1,56 @@
+<!--CCS-META
+{
+    "slug": "webinar-from-open-close",
+    "title": "Webinar From open close",
+    "status": "publish",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general",
+            "exclude/singular/page/35536"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+<script>
+    const getWebNearShowBtn = document.querySelectorAll('[href="#webinar_form"]');
+
+    const getWebNearForm = document.querySelector('.web_near_form');
+    const getWebNearFormClose = document.querySelector('.web_near_close');
+
+    const getWebNearFormIndia = document.querySelector('.web_near_form_india');
+    const getWebNearFormCloseIndia = document.querySelector('.web_near_form_india .web_near_close');
+    for(let eachWebNearBtn of getWebNearShowBtn){
+        eachWebNearBtn.addEventListener('click', function(e){
+            e.preventDefault();
+            if(isDualWebinar || true){
+                getWebNearFormIndia.setAttribute('show_status', true);
+                getWebNearFormIndia.setAttribute('gql_status', false);
+                getWebNearFormIndia.setAttribute('complete_stauts', false);
+                getWebNearFormIndia.querySelector(".webnear_regitration_fr_india").setAttribute("ac_step", 1);
+                getWebNearFormIndia.querySelector(".webnear_regitration_fr_india").setAttribute("loader_status", false);
+                countryReady.then(() => {
+                    if(!isCountryIndia) getWebNearFormIndia.setAttribute('form_type', "organic");
+                });
+            }else{
+                getWebNearForm.setAttribute('show_status', true);
+                getWebNearForm.setAttribute('gql_status', false);
+                getWebNearForm.setAttribute('complete_stauts', false);
+                getWebNearForm.querySelector(".webnear_regitration_fr").setAttribute("ac_step", 1);
+                getWebNearForm.querySelector(".webnear_regitration_fr").setAttribute("loader_status", false);
+                document?.querySelector(".gql_registration_popup").setAttribute("ac_step", 1);
+            }
+        })
+    }
+    getWebNearFormClose.addEventListener('click', function(){
+        getWebNearForm.setAttribute('show_status', false);
+    })
+    getWebNearFormCloseIndia.addEventListener('click', function(){
+        getWebNearFormIndia.setAttribute('show_status', false);
+    })
+		countryReady.then(() => {
+			if(!isCountryIndia) getWebNearFormIndia.setAttribute('form_type', "organic");
+		});
+</script>

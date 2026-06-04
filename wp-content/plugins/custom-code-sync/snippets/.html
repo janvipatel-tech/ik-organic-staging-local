@@ -1,0 +1,32 @@
+<!--CCS-META
+{
+    "slug": "",
+    "title": "Header Btn Hide",
+    "status": "draft",
+    "meta": {
+        "_elementor_extra_options": [],
+        "_elementor_conditions": [
+            "include/singular/page/29193"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1"
+    }
+}
+CCS-META-->
+<script>
+    
+const registerBtn = document.querySelector('.register_btn');
+    const fristSection = document.querySelector('.first_section');
+
+    document.addEventListener('scroll', () => {
+        const rect = fristSection.getBoundingClientRect();
+        console.log(rect.bottom)
+        if (rect.bottom <= 0) {
+            registerBtn.classList.add('active');
+
+        } else {
+            registerBtn.classList.remove('active');
+        }
+    });
+
+</script>

@@ -1,0 +1,84 @@
+<!--CCS-META
+{
+    "slug": "reinvent2026-head",
+    "title": "reinvent2026 head",
+    "status": "draft",
+    "meta": {
+        "_elementor_conditions": [
+            "include/singular/page/50571"
+        ],
+        "_elementor_location": "elementor_head",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+<!-- reinvent2026 head -->
+<script>
+let isUpcommingError = false;
+// if(window.location.pathname.includes('reinvent2026')){
+    const originalFetch = window.fetch;
+
+    window.fetch = async function(resource, options) {
+        let isUpcommingSlot = resource.includes("upcoming-slots");
+
+        if(!isUpcommingSlot) return originalFetch(resource, options);
+
+          try { 
+                const response = await originalFetch(resource, options);
+
+                if (response.ok) return response;
+                isUpcommingError = currentFallBack();
+                return response;
+            } catch (error) {
+                console.error("Error in fetch for upcoming-slots", error);
+                isUpcommingError = currentFallBack();
+                throw error; // keep native behavior
+            }
+//     };
+
+    function currentFallBack(){
+        let slots;
+        if(v_country === "India"){
+            slots = [
+												{
+														"start_time": "2026-01-28T08:30:00+05:30",
+														"end_time": "2026-01-28T10:30:00+05:30",
+														"utc_start_time": "2026-01-28T03:00:00+00:00",
+														"utc_end_time": "2026-01-28T05:00:00+00:00",
+														"day": "28",
+														"month": "01",
+														"year": "2026",
+														"hour": "08",
+														"minute": "30",
+														"second": "00",
+														"am_or_pm": "AM",
+														"weekday": "Wednesday",
+														"invitee_start_time": "08:30AM - Wednesday, January 28, 2026",
+														"invitee_end_time": "10:30AM - Wednesday, January 28, 2026"
+												}
+										];
+        }else{
+            slots = [
+												{
+														"start_time": "2026-01-27T19:00:00-08:00",
+														"end_time": "2026-01-27T21:00:00-08:00",
+														"utc_start_time": "2026-01-28T03:00:00+00:00",
+														"utc_end_time": "2026-01-28T05:00:00+00:00",
+														"day": "27",
+														"month": "01",
+														"year": "2026",
+														"hour": "07",
+														"minute": "00",
+														"second": "00",
+														"am_or_pm": "PM",
+														"weekday": "Tuesday",
+														"invitee_start_time": "07:00PM - Tuesday, January 27, 2026",
+														"invitee_end_time": "09:00PM - Tuesday, January 27, 2026"
+												}
+										];
+        }
+        return slots;
+    }
+}
+</script>

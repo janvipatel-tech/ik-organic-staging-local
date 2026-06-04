@@ -1,0 +1,124 @@
+<!--CCS-META
+{
+    "slug": "masterclass-archive-2nd-version",
+    "title": "Masterclass Archive 2nd version",
+    "status": "publish",
+    "meta": {
+        "_elementor_conditions": [
+            "include/singular/page/39138"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+<script>
+function visitorsCounter({id, publishDate, eventDate}) {
+  if (!(publishDate instanceof Date)) publishDate = new Date(publishDate);
+  if (!(eventDate instanceof Date)) eventDate = new Date(eventDate);
+
+  const now = new Date();
+
+  // Days since publish
+  const daysSincePublish = Math.max(1, Math.floor((now - publishDate) / (1000 * 60 * 60 * 24)));
+
+  // Base visitors = days since publish × random factor
+  let base = daysSincePublish * 20;
+
+  // Add some "event hype" boost if event is near
+  const daysUntilEvent = Math.ceil((eventDate - now) / (1000 * 60 * 60 * 24));
+  if (daysUntilEvent > 0 && daysUntilEvent < 10) {
+    base += (10 - daysUntilEvent) * 50; // closer ? more visitors
+  }
+
+  // Add deterministic variation from post id (so each post looks different)
+  const numFromId = parseInt(id.replace(/\D/g, ""), 10) || 1;
+  base += (numFromId % 100) * 5;
+
+  // Final "visitors"
+  return Math.floor(base);
+}
+
+// Example test
+console.log(visitorsCounter({
+  id: "post-101",
+  publishDate: "2025-07-01",
+  eventDate: "2025-09-01"
+}));
+
+// Apply to elements
+let tDay = new Date();
+
+document.addEventListener("DOMContentLoaded", function(){
+    document.querySelectorAll('.e-loop-item').forEach(el => {
+        let postClass = Array.from(el.classList).find(cls => /^post-\d+$/.test(cls));
+        let eventDate = new Date(el.querySelector('.ms_post_title').getAttribute('event_start_date_time') || '');
+        el.querySelector('.visitors').textContent = visitorsCounter({
+            id: postClass,
+            publishDate: new Date(el.querySelector("[publish_date]").getAttribute("publish_date")),
+            eventDate: eventDate
+        });
+    });
+})
+
+	
+document.querySelector('.masterclass_search form').addEventListener('submit', e =>  e.preventDefault());
+document.querySelector('.masterclass_search form input[type="search"]').addEventListener('input', function (e) {
+    let searchTerm = this.value.toLowerCase();
+    document.querySelectorAll('.e-loop-item').forEach(el => {
+        if (el.innerText.toLowerCase().includes(searchTerm)) {
+            el.style.display = '';
+        } else {
+            el.style.display = 'none';
+        }
+    });
+});
+
+
+document.querySelector('.copy_link_btn a').addEventListener('click', function(e) {
+    e.preventDefault();
+    const url = location.href.split('?')[0], cpyBtn = this;
+    navigator.clipboard.writeText(url).then(() => {
+        cpyBtn.querySelector(".elementor-button-text").innerHTML = 'Copied';
+        cpyBtn.querySelector('.elementor-button-icon').innerHTML = `<svg width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10.5 3L5 8.5L2.5 6" stroke="#FAFDFF" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    }).catch(err => {
+        console.error("Error in copy link button", err);
+        cpyBtn.innerText = 'Link Copied Faild!';
+    });
+});
+
+
+document.querySelectorAll('.filter_mapping').forEach(function(item){
+    const mappingFilter = item.getAttribute('mapping_rules').split(',').map(i => i.trim());
+
+    item.addEventListener('click', function(){
+        const taxItems = Array.from(document.querySelectorAll('.tax_filter .e-filter-item'));
+        const selectTax = [], unselectTax = [];
+
+        taxItems.forEach((eachTax) => {
+            const selectStatus = eachTax.getAttribute('aria-pressed') === 'true';
+            const isInside = mappingFilter.includes(eachTax.innerText.trim());
+            if(selectStatus && !isInside){
+                unselectTax.push(eachTax);
+            }else if(!selectStatus && isInside){
+                selectTax.push(eachTax);
+            }
+        });
+
+        const clickAbleItems = [...unselectTax, ...selectTax];
+
+        let index = 0;
+
+        function clickNext() {
+            if(index >= taxItems.length) return;
+            clickAbleItems[index].click();
+            index++;
+            setTimeout(clickNext, 500); 
+        }
+        clickNext();
+    });
+});
+
+
+</script>

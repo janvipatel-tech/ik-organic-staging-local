@@ -1,0 +1,52 @@
+<!--CCS-META
+{
+    "slug": "homepage-new-ab-test",
+    "title": "homepage new ab test",
+    "status": "draft",
+    "meta": {
+        "_elementor_conditions": [
+            "include/singular/front_page"
+        ],
+        "_elementor_location": "elementor_head",
+        "_elementor_priority": "1",
+        "_elementor_extra_options": []
+    }
+}
+CCS-META-->
+<script nitro-exclude>
+  const splitThreshold = 50;
+  const COOKIE_NAME = "homepage_new_split_id";
+
+  function getOrSetCookie(name, defaultValue) {
+    const cookie = document.cookie.match(`(?:^|; )${name}=([^;]*)`);
+    if (cookie) return cookie[1];
+    const randomNum = Math.floor(Math.random() * 100);
+    const value = defaultValue || randomNum.toString().padStart(2, "0");
+    document.cookie = `${name}=${value}; expires=${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;
+    return value;
+  }
+
+  function isVariant() {
+    try {
+      if (window.location.search.includes('testbot=true')) {
+        return false;
+      }
+
+      const uuid = getOrSetCookie(COOKIE_NAME);
+      return parseInt(uuid) >= splitThreshold;
+    } catch {
+      console.error("Error determining variant.");
+      return false;
+    }
+  }
+
+  function appendUrlParams(url) {
+    const currentParams = window.location.search;
+    return currentParams ? `${url}${currentParams}` : url;
+  }
+
+  if (isVariant()) {
+      const redirectUrl = "/home";
+      window.location.href = appendUrlParams(redirectUrl);
+  }
+</script>
