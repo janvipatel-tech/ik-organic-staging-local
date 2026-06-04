@@ -1,0 +1,15 @@
+{
+    "slug": "custom-sticky-tab-course-single-page-abir",
+    "title": "Custom sticky tab course single page - Abir",
+    "status": "publish",
+    "content": "",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_code": "<!-- Custom sticky tab course single page - Abir -->\r\n<script>\r\n  const cstButtons = document.querySelectorAll('.cst_tb_btn');\r\n  const cstContents = document.querySelectorAll('.content_bx');\r\n\r\n  function hideAllContent() {\r\n    cstContents.forEach(content => content.style.display = 'none');\r\n  }\r\n\r\n  function removeActiveClass() {\r\n    cstButtons.forEach(button => button.classList.remove('active'));\r\n  }\r\n\r\n  hideAllContent();\r\n  if (cstContents[0]?.style?.display) {\r\n    cstContents[0].style.display = 'flex';\r\n  }\r\n  cstButtons[0]?.classList?.add('active');\r\n\r\n  // Add event listeners to each button\r\n  cstButtons.forEach((button, index) => {\r\n    button.addEventListener('click', function () {\r\n      hideAllContent();\r\n      cstContents[index].style.display = 'flex';\r\n      removeActiveClass();\r\n      button.classList.add('active');\r\n    });\r\n  });\r\n</script>",
+        "_elementor_extra_options": []
+    }
+}

@@ -1,0 +1,15 @@
+{
+    "slug": "preload-hero-image-p",
+    "title": "Preload Hero Image [P]",
+    "status": "publish",
+    "content": "",
+    "meta": {
+        "_elementor_conditions": [
+            "include/singular/page/19"
+        ],
+        "_elementor_location": "elementor_head",
+        "_elementor_priority": "1",
+        "_elementor_code": "<link rel=\"preload\" as=\"image\" href=\"http://ik-organic-staging.local/wp-content/uploads/2024/10/64fae2478884cb2d681b7428_hero-image.webp\">\r\n",
+        "_elementor_extra_options": []
+    }
+}

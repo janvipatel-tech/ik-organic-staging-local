@@ -1,0 +1,16 @@
+{
+    "slug": "image-loop",
+    "title": "ipv3 Image loop (Hasib)",
+    "status": "publish",
+    "content": "",
+    "meta": {
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_code": "<script>\r\n\t// h1 after image loop \r\n\t// authhor: Abu Hasib\r\n\r\nconst imgeSrc = [\r\n    '/wp-content/uploads/2024/12/Microsoft_logo.svg',\r\n    '/wp-content/uploads/2024/12/Netflix_2015_logo.svg',\r\n    '/wp-content/uploads/2024/12/Facebook.svg',\r\n    '/wp-content/uploads/2024/12/apple-light-1.svg',\r\n    '/wp-content/uploads/2024/12/amazon-logo.png',\r\n    '/wp-content/uploads/2024/12/linkedin-light-2.svg',\r\n    '/wp-content/uploads/2024/12/Logo_Google_2013_Official.svg'\r\n];\r\nconst ipv3imgeSrc = [\r\n    '/wp-content/uploads/2024/12/Facebook-Logo.png',\r\n    '/wp-content/uploads/2024/12/svgexport-1.png',\r\n    '/wp-content/uploads/2024/12/svgexport-2.png',\r\n    '/wp-content/uploads/2024/12/svgexport-3.png'\r\n];\r\n\r\nconst title = document.querySelector('.post_title h1');\r\nconst postLogo = document.querySelector('.post_logo img');\r\nlet index = 0;\r\n\r\n// Create and append image container\r\nconst imgeDiv = document.createElement('div');\r\nimgeDiv.classList.add('img_div');\r\ntitle.appendChild(imgeDiv);\r\n\r\nconst Img = document.createElement('img');\r\nImg.classList.add('title_img');\r\nimgeDiv.appendChild(Img);\r\n\r\nlet pageAddress = document.location.href;\r\nlet segments = pageAddress.split('/');\r\nlet ipv3 = segments[3];\r\n\r\nif (postLogo) {\r\n    Img.src = postLogo.src;\r\n} else if (ipv3 === 'ipv3') {\r\n    ipv3imgeSrc.forEach((item, i) => {\r\n        if (i === 0) {\r\n            Img.src = item;\r\n        } else {\r\n            const ipv3Img = document.createElement('img');\r\n            ipv3Img.classList.add('title_img');\r\n            ipv3Img.src = item;\r\n            imgeDiv.appendChild(ipv3Img);\r\n        }\r\n    });\r\n} else {\r\n    // Image slider with fade effect\r\n    Img.src = imgeSrc[index];\r\n    setInterval(() => {\r\n        Img.style.opacity = 0;\r\n        setTimeout(() => {\r\n            index = (index + 1) % imgeSrc.length;\r\n            Img.src = imgeSrc[index];\r\n            Img.style.opacity = 1;\r\n        }, 500); // Match fade-out duration\r\n    }, 2000); // Adjusted for better visibility\r\n}\r\n\r\n\r\n</script>",
+        "_elementor_extra_options": [],
+        "_elementor_conditions": [
+            "include/singular/lp2",
+            "include/singular/ipv3"
+        ]
+    }
+}

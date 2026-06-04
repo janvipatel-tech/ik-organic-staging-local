@@ -1,0 +1,15 @@
+{
+    "slug": "footer-hide-on-click",
+    "title": "Footer hide on click",
+    "status": "publish",
+    "content": "",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_code": "<script>\r\ndocument.addEventListener('DOMContentLoaded', () => {\r\n    const footerHideIcon = document.getElementById('footer_hide_icon');\r\n    const footerHideIconContainer = document.getElementById('footer_hide_container');\r\n\r\n    if (!footerHideIcon || !footerHideIconContainer) return;\r\n\r\n    footerHideIcon.addEventListener('click', () => {\r\n        footerHideIconContainer.classList.toggle('max_height_0');\r\n        footerHideIcon.classList.toggle('icon_rotate');\r\n        footerHideIconContainer.classList.toggle('lock');\r\n    });\r\n\r\n    window.addEventListener('scroll', () => {\r\n        if (!(footerHideIconContainer.classList.contains('lock'))) {\r\n            let distanceFromBottom =\r\n                document.documentElement.scrollHeight - window.scrollY - window.innerHeight;\r\n\r\n            if (window.scrollY < 1000 || distanceFromBottom < 600) {\r\n                if (!footerHideIconContainer.classList.contains(\"max_height_0\")) {\r\n                    footerHideIconContainer.classList.add('max_height_0');\r\n                    footerHideIcon.classList.toggle('icon_rotate');\r\n                }\r\n            } else {\r\n                if (footerHideIconContainer.classList.contains(\"max_height_0\")) {\r\n                    footerHideIconContainer.classList.remove('max_height_0');\r\n                    footerHideIcon.classList.toggle('icon_rotate');\r\n                }\r\n            }\r\n        }\r\n    });\r\n});\r\n\r\n</script>",
+        "_elementor_extra_options": []
+    }
+}

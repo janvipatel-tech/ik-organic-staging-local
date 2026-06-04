@@ -1,0 +1,15 @@
+{
+    "slug": "",
+    "title": "Header Btn Hide",
+    "status": "draft",
+    "content": "",
+    "meta": {
+        "_elementor_extra_options": [],
+        "_elementor_conditions": [
+            "include/singular/page/29193"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_code": "<script>\r\n    \r\nconst registerBtn = document.querySelector('.register_btn');\r\n    const fristSection = document.querySelector('.first_section');\r\n\r\n    document.addEventListener('scroll', () => {\r\n        const rect = fristSection.getBoundingClientRect();\r\n        console.log(rect.bottom)\r\n        if (rect.bottom <= 0) {\r\n            registerBtn.classList.add('active');\r\n\r\n        } else {\r\n            registerBtn.classList.remove('active');\r\n        }\r\n    });\r\n\r\n</script>"
+    }
+}

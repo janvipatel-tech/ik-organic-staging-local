@@ -1,0 +1,15 @@
+{
+    "slug": "header-countdown-show-on-scroll",
+    "title": "Header countdown show on scroll",
+    "status": "publish",
+    "content": "",
+    "meta": {
+        "_elementor_conditions": [
+            "include/singular/page/175"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_code": "<script>\r\njQuery(document).ready(function($) {\r\n    // Only apply scroll effect on the test page\r\n    if ($('body').hasClass('page-id-175')) { // Replace 'page-id-test' with the actual class or ID for the test page\r\n        // Show .hedr_show when scrolled 500px from the top\r\n        $(window).scroll(function() {\r\n            if ($(this).scrollTop() > 500) {\r\n                $('.hedr_show').css('opacity', '1'); // Show the element\r\n            } else {\r\n                $('.hedr_show').css('opacity', '0'); // Hide the element\r\n            }\r\n        });\r\n    }\r\n});\r\n</script>\r\n",
+        "_elementor_extra_options": []
+    }
+}

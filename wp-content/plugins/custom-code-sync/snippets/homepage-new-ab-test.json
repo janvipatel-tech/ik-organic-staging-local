@@ -1,0 +1,15 @@
+{
+    "slug": "homepage-new-ab-test",
+    "title": "homepage new ab test",
+    "status": "draft",
+    "content": "",
+    "meta": {
+        "_elementor_conditions": [
+            "include/singular/front_page"
+        ],
+        "_elementor_location": "elementor_head",
+        "_elementor_priority": "1",
+        "_elementor_code": "<script nitro-exclude>\r\n  const splitThreshold = 50;\r\n  const COOKIE_NAME = \"homepage_new_split_id\";\r\n\r\n  function getOrSetCookie(name, defaultValue) {\r\n    const cookie = document.cookie.match(`(?:^|; )${name}=([^;]*)`);\r\n    if (cookie) return cookie[1];\r\n    const randomNum = Math.floor(Math.random() * 100);\r\n    const value = defaultValue || randomNum.toString().padStart(2, \"0\");\r\n    document.cookie = `${name}=${value}; expires=${new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toUTCString()}; path=/`;\r\n    return value;\r\n  }\r\n\r\n  function isVariant() {\r\n    try {\r\n      if (window.location.search.includes('testbot=true')) {\r\n        return false;\r\n      }\r\n\r\n      const uuid = getOrSetCookie(COOKIE_NAME);\r\n      return parseInt(uuid) >= splitThreshold;\r\n    } catch {\r\n      console.error(\"Error determining variant.\");\r\n      return false;\r\n    }\r\n  }\r\n\r\n  function appendUrlParams(url) {\r\n    const currentParams = window.location.search;\r\n    return currentParams ? `${url}${currentParams}` : url;\r\n  }\r\n\r\n  if (isVariant()) {\r\n      const redirectUrl = \"/home\";\r\n      window.location.href = appendUrlParams(redirectUrl);\r\n  }\r\n</script>",
+        "_elementor_extra_options": []
+    }
+}

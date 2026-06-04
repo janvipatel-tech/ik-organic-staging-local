@@ -1,0 +1,15 @@
+{
+    "slug": "verification-strings",
+    "title": "Verification Strings",
+    "status": "publish",
+    "content": "",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_head",
+        "_elementor_priority": "1",
+        "_elementor_code": "<meta name=\"facebook-domain-verification\" content=\"itszj3ryg0vtirw9rznplpz2m65pm3\"/>\r\n<meta content=\"849281225124904\" property=\"fb:pages\">\r\n<meta name=\"google-site-verification\" content=\"g5MiSuO6e-hADU3K0p4jXmWSliG8iM4C1uAsQH-nrVw\"/>\r\n<meta name=\"google-site-verification\" content=\"wUJdF2phjHl5IfpFMXn-BXoaPku3ofIKiAKWRg3LhYc\"/>",
+        "_elementor_extra_options": []
+    }
+}

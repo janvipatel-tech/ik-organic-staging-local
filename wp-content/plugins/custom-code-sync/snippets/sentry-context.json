@@ -1,0 +1,15 @@
+{
+    "slug": "sentry-context",
+    "title": "sentry context",
+    "status": "publish",
+    "content": "",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_code": "<!-- sentry-context -->\r\n<script>\r\n  function setSentryUser() {\r\n    try {\r\n      if (typeof Sentry !== 'undefined' && \r\n          typeof Sentry.isEnabled === 'function' && \r\n          Sentry.isEnabled() && \r\n          Sentry.setUser && \r\n          typeof Sentry.setUser === 'function') {\r\n        Sentry.setUser({\r\n          id: typeof visitor_id !== 'undefined' ? visitor_id : null,\r\n        });\r\n        return true;\r\n      }\r\n      return false;\r\n    } catch (error) {\r\n      console.error('Error setting Sentry user:', error);\r\n      return false;\r\n    }\r\n  }\r\n\r\n  if (typeof window !== 'undefined') {\r\n    window.addEventListener('sentryInitialized', function() {\r\n      setSentryUser();\r\n    });\r\n    \r\n    // Fallback: If event already fired (race condition) or Sentry is already initialized\r\n    if (typeof Sentry !== 'undefined' && typeof Sentry.isEnabled === 'function' && Sentry.isEnabled()) {\r\n      setSentryUser();\r\n    }\r\n  }\r\n</script>",
+        "_elementor_extra_options": []
+    }
+}

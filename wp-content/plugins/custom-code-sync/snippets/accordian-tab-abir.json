@@ -1,0 +1,15 @@
+{
+    "slug": "accordian-tab-abir",
+    "title": "Accordian + Tab - Abir",
+    "status": "publish",
+    "content": "",
+    "meta": {
+        "_elementor_conditions": [
+            "include/singular/page/28111"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_code": "<!-- Accordian + Tab - Abir -->\r\n<script>\r\n  const tabImages = {\r\n    StyleLens_btn: 'StyleLens_img',\r\n    MediWatch_btn: 'MediWatch_img',\r\n    BinSense_btn: 'BinSense_img',\r\n    Resume_Coach_btn: 'Resume_Coach_img',\r\n    ShopTalk_btn: 'ShopTalk_img',\r\n  };\r\n  function showImage(imageId) {\r\n    Object.values(tabImages).forEach((id) => {\r\n      document.getElementById(id).style.opacity = id === imageId ? '1' : '0';\r\n    });\r\n  }\r\n\r\n  Object.keys(tabImages).forEach((buttonId) => {\r\n    document.getElementById(buttonId).addEventListener('click', () => {\r\n      showImage(tabImages[buttonId]);\r\n    });\r\n  });\r\n\r\n  showImage('StyleLens_img');\r\n</script>",
+        "_elementor_extra_options": []
+    }
+}

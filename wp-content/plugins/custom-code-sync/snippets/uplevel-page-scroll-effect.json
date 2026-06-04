@@ -1,0 +1,15 @@
+{
+    "slug": "uplevel-page-scroll-effect",
+    "title": "Uplevel Page Scroll Effect",
+    "status": "publish",
+    "content": "",
+    "meta": {
+        "_elementor_conditions": [
+            "include/singular/page/3132"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_code": " <script>\r\n  const containers = [];\r\n  const imagesArray = Array.from(document.querySelectorAll('.img-001'));\r\n\tlet i = 1;\r\n  const imgBox001 = document.getElementById('images-00');\r\n  \r\n\r\n  while (i <= 5) {\r\n    const container = document.getElementById(`icon-box-${i}`);\r\n    containers.push(container);\r\n    i++;\r\n  }\r\n\r\n  window.addEventListener('scroll', () => {\r\n  const boxPosition = window.getComputedStyle(imgBox001).position;\r\n  if(boxPosition == \"fixed\"){\r\n    imgBox001.style.top = \"50%\";\r\n    imgBox001.style.transform = \"translateY(-20%)\"\r\n  }\r\n  const middleScreenPoint = window.innerHeight / 2;\r\n\r\n\r\n  containers.forEach((container, index) => {\r\n    if (container) {\r\n      const rect = container.getBoundingClientRect();\r\n\r\n      if (rect.top <= middleScreenPoint && rect.bottom > middleScreenPoint) {\r\n\t\timagesArray.forEach(img => img.classList.remove('opacity-001'));\r\n\t\timagesArray[index].classList.add('opacity-001');\r\n      }\r\n    }\r\n  });\r\n});\r\n</script>",
+        "_elementor_extra_options": []
+    }
+}

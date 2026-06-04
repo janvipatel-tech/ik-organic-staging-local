@@ -1,0 +1,15 @@
+{
+    "slug": "clarity",
+    "title": "Clarity",
+    "status": "publish",
+    "content": "",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_head",
+        "_elementor_priority": "1",
+        "_elementor_code": "<!--Microsoft Clarity-->\r\n<script>\r\n (function (c, l, a, r, i, t, y) {\r\n     c[a] = c[a] || function () {\r\n         (c[a].q = c[a].q || []).push(arguments)\r\n     }\r\n         ;\r\n     t = l.createElement(r);\r\n     t.async = 1;\r\n     t.src = \"https://www.clarity.ms/tag/\" + i;\r\n     y = l.getElementsByTagName(r)[0];\r\n     y.parentNode.insertBefore(t, y);\r\n }\r\n )(window, document, \"clarity\", \"script\", \"mmmf6gdppv\");\r\n</script>\r\n<!--Microsoft Clarity end-->\r\n",
+        "_elementor_extra_options": []
+    }
+}

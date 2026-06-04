@@ -1,0 +1,15 @@
+{
+    "slug": "scroll-box",
+    "title": "Scroll box",
+    "status": "publish",
+    "content": "",
+    "meta": {
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_code": "<script>\r\n\tdocument.addEventListener('DOMContentLoaded', () => {\r\n\t\tconst scrollContainer = document.querySelector('.scroll_container');\r\n\r\n    const items = document.querySelectorAll('.item_box .scroll_item');\r\n    const buttons = document.querySelectorAll('.button_dev .elementor-button');\r\n\r\n    if (buttons.length > 0) {\r\n        buttons[0].classList.add('btn_active');\r\n    }\r\n\r\n    const observer = new IntersectionObserver((entries) => {\r\n        entries.forEach(entry => {\r\n            if (entry.isIntersecting) {\r\n                const index = Array.from(items).indexOf(entry.target);\r\n                if (index !== -1) {\r\n                    buttons.forEach(button => button.classList.remove('btn_active'));\r\n                    buttons[index].classList.add('btn_active');\r\n                }\r\n            }\r\n        });\r\n    }, {\r\n        root: scrollContainer,\r\n        threshold: 0.5\r\n    });\r\n\r\n    items.forEach(item => observer.observe(item));\r\n});\r\n</script>",
+        "_elementor_extra_options": [],
+        "_elementor_conditions": [
+            "include/general"
+        ]
+    }
+}

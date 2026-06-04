@@ -1,0 +1,15 @@
+{
+    "slug": "generative-ai-course-curriculum-tab",
+    "title": "Generative AI Course Curriculum tab",
+    "status": "publish",
+    "content": "",
+    "meta": {
+        "_elementor_conditions": [
+            "include/singular/page/6557"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_code": "<script>\r\n\tdocument.addEventListener('DOMContentLoaded', function () {\r\n    function toggleContainers(btn1, btn2, container1, container2) {\r\n        document.getElementById(btn1).addEventListener('click', function () {\r\n            document.getElementById(container1).style.display = 'block';\r\n            document.getElementById(container2).style.display = 'none';\r\n\r\n            this.classList.add('active-btn');\r\n            document.getElementById(btn2).classList.remove('active-btn');\r\n        });\r\n\r\n        document.getElementById(btn2).addEventListener('click', function () {\r\n            document.getElementById(container1).style.display = 'none';\r\n            document.getElementById(container2).style.display = 'block';\r\n\r\n            this.classList.add('active-btn');\r\n            document.getElementById(btn1).classList.remove('active-btn');\r\n        });\r\n    }\r\n\t\r\n    toggleContainers('btn1', 'btn2', 'container1', 'container2');\r\n    toggleContainers('cap_btn1', 'cap_btn2', 'cap_container1', 'cap_container2');\r\n});\r\n\r\n</script>",
+        "_elementor_extra_options": []
+    }
+}

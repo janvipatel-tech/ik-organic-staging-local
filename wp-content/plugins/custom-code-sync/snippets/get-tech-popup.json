@@ -1,0 +1,15 @@
+{
+    "slug": "get-tech-popup",
+    "title": "Get tech Popup",
+    "status": "publish",
+    "content": "",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_head",
+        "_elementor_priority": "1",
+        "_elementor_code": "<script>\r\n    let blogPopupShown = false;\r\n    window.addEventListener(\"DOMContentLoaded\", function () {\r\n\t\t\t\tconst body = document.body;\r\n\t\t\t\tif(body.classList.contains(\"error404\"))\r\n\t\t\t\t\t{\r\n\t\t\t\t\t\treturn;\r\n\t\t\t\t\t}\r\n        const getTechPoup = document.querySelector(\".get_tech_popup\");\r\n\r\n        if(!getTechPoup) return;\r\n\r\n        try {\r\n            function getPopUpDelay() {\r\n                let delay = 10000;\r\n                uuid = getCookie(\"unique_visitor_id6\") || \"\";\r\n                const trimmedUuid = uuid.slice(0, 50);\r\n                const lastTwoDigits = parseInt(trimmedUuid.slice(-2)); // Defaults to base 10\r\n                isVarient = lastTwoDigits >= weightageOfVariant;\r\n\r\n                return isVarient ? 20000 : delay\r\n            }\r\n\r\n            const delayTime = getPopUpDelay();\r\n            console.log(\"PA DT: \", delayTime);\r\n\r\n            setTimeout(() => {\r\n                const webinarLightbox = document.querySelector(\".webinar__lightbox\");\r\n                if (getTechPoup.getAttribute(\"show_status\") === \"false\") {\r\n                    // Open the popup\r\n                    if(location.pathname.includes(\"/blogs/\")){\r\n                        getTechPoup.setAttribute(\"show_status\", false);\r\n                        blogPopupShown = false;\r\n                    }\r\n                }\r\n            }, delayTime);\r\n\r\n            // Add event listeners to close the popup\r\n            const closeElements = [\r\n                document.querySelector(\".get_tech_popup_close\"),\r\n                document.querySelector(\".webinar_reg_btn_get\")            \r\n            ];\r\n        \r\n            closeElements.forEach((element) => {\r\n                element.addEventListener(\"click\", () => {\r\n                    getTechPoup.setAttribute(\"show_status\", false);\r\n                });\r\n            });\r\n        } catch (error) {\r\n        console.error(error);\r\n        }\r\n      })\r\n\r\n</script>",
+        "_elementor_extra_options": []
+    }
+}

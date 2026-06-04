@@ -1,0 +1,15 @@
+{
+    "slug": "accordion-icon-animation",
+    "title": "Accordion icon animation",
+    "status": "publish",
+    "content": "",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_body_end",
+        "_elementor_priority": "1",
+        "_elementor_code": "<script>\r\n    document.querySelectorAll('.inner_accordion .e-n-accordion-item-title').forEach((item) => {\r\n        item.addEventListener('click', () => {\r\n            item.classList.toggle('active');\r\n        });\r\n    });\r\n</script>",
+        "_elementor_extra_options": []
+    }
+}

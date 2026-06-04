@@ -1,0 +1,15 @@
+{
+    "slug": "pixel",
+    "title": "Pixel",
+    "status": "publish",
+    "content": "",
+    "meta": {
+        "_elementor_conditions": [
+            "include/general"
+        ],
+        "_elementor_location": "elementor_head",
+        "_elementor_priority": "1",
+        "_elementor_code": "<script type=\"text/javascript\">\r\n const pixelId = 'b5c0b541-4bec-449b-bae7-32e7881c81a3';\r\n</script>",
+        "_elementor_extra_options": []
+    }
+}
